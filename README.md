@@ -63,7 +63,7 @@ An AI-like engine that analyzes your metrics and provides tactical feedback:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/study-log.git
+   git clone https://github.com/CaptainBirdeloper/studytracker
    ```
 2. Open `index.html` in any modern browser.
 3. (Optional) Deploy to Vercel by simply connecting your GitHub repo.
