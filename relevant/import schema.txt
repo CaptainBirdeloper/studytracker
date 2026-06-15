@@ -1,0 +1,58 @@
+STUDY.LOG - DATA IMPORT BLUEPRINT
+================================
+
+To successfully import data into Study.Log, your JSON file must follow the structure below. 
+The app expects a "study_log_data" object containing "history" and "totalReps".
+
+JSON SCHEMA STRUCTURE:
+---------------------
+{
+  "history": {
+    "YYYY-MM-DD": {
+      "reps": number,           // Total questions for the day
+      "time": number,           // Total time for the day in SECONDS
+      "chapters": {
+        "chapter name": {       // Lowercase chapter name
+          "reps": number,       // Questions for this specific chapter
+          "time": number,       // Time for this chapter in SECONDS
+          "sources": [string]   // Array of sources (e.g., ["module", "pathfinder"])
+        }
+      }
+    }
+  },
+  "totalReps": number,          // All-time total question count
+  "settings": {                 // Optional: UI preferences
+    "fontSize": number,
+    "fontFamily": string,
+    "customFont": string
+  }
+}
+
+EXAMPLE VALID FILE:
+------------------
+{
+  "history": {
+    "2026-05-21": {
+      "reps": 10,
+      "time": 2700,
+      "chapters": {
+        "kinematics": {
+          "reps": 10,
+          "time": 2700,
+          "sources": ["module"]
+        }
+      }
+    }
+  },
+  "totalReps": 10,
+  "settings": {
+    "fontSize": 16,
+    "fontFamily": "'Inter', sans-serif"
+  }
+}
+
+CRITICAL NOTES:
+1. Time must be in SECONDS (e.g., 45 mins = 2700).
+2. Dates must be in YYYY-MM-DD format.
+3. Chapter names should be lowercase for best matching.
+4. If you manually edit the JSON, ensure all braces and commas are valid.

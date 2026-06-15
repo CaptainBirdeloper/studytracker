@@ -1,0 +1,65 @@
+# STUDY.LOG - Technical Summary (Updated 2026-06-15)
+
+## Core Concept
+High-performance, AMOLED-black PWA for JEE aspirants. Tracks **Quantity** (Questions) and **Density** (Time per Question) with data-driven tactical advice.
+
+## Current Architecture
+- **Directory Structure**: Organized into `/js` and `/css` for professional cleanliness and Vercel scalability.
+- **State Management**: Manual logging of Questions, Duration (mins), Chapter, and Source Material. Lingering zeros in input fields are automatically cleared on focus and restored on empty blur.
+- **UI**: AMOLED-optimized (#000000). Tailwind JIT via CDN. Borderless high-density Bento grid design maximizing space. Bottom navigation behaves as responsive sidebar on desktop viewports. Settings panel contains flat list rows.
+- **Storage**: Persistent `localStorage` under `study_log_data`.
+- **Modularity**: ESM-style individual script loading. No bundler/node dependencies.
+- **Security**: Global XSS protection via `window.escapeHTML` sanitization on all dynamic text outputs. Custom font inputs sanitized.
+
+## Quick FAQ: Where to Edit?
+- **Folder Structure?** Root contains HTML/PWA files. logic in `/js`, styles in `/css`.
+- **Modify Study Advice logic?** `js/advice.js` (supports touch swipe gestures and AMOLED HTML micro-visualizers).
+- **Update Question Density benchmarks?** `js/stats.js` (inside `renderDensity`, parses range limits for Speedy, On Track, and Slow dynamic status badges).
+- **Adjust Weighted Practice bias?** `js/practice.js` (uses `JEE_WEIGHTAGE` from `jee_data.js`, includes interactive checklists, progress calculations, and sessionStorage session save/restore).
+- **Change Settings/Export logic?** `js/settings.js`.
+- **Edit Service Worker caching?** `sw.js` (Root). Bump `CACHE_NAME` after edits.
+
+## File Map (Load Order)
+1. `js/storage.js`: CRUD, global `applySettings`, and `escapeHTML` helper.
+2. `js/jee_data.js`: Weightage constants for 70+ chapters.
+3. `js/chapter_validator.js`: Fuzzy matching engine (70% match threshold) and `escapeHTML` fallback.
+4. `js/analytics.js`: Aggregation for trends, distribution, and density.
+5. `js/graphs.js`: Weekly bar graph rendering.
+6. `js/history.js`: Optimized history list (Initial limit 4, lazy expand, visual fade, long press hold-to-delete, and XSS escaping).
+7. `js/distribution.js`: Subject/Chapter mastery tracking (with XSS escaping).
+8. `js/advice.js`: Dynamic advice carousel (Consistency/Volume/Density logic).
+9. `js/stats.js`: Main orchestration for the Performance panel.
+10. `js/practice.js`: Weighted vs. Random question generator (interactive checklists, progress tracking, and session state persistence).
+
+## Data Schema
+```json
+{
+  "totalReps": 780,
+  "history": {
+    "YYYY-MM-DD": {
+      "reps": 32,
+      "time": 5400,
+      "chapters": {
+        "kinematics": { 
+          "reps": 15, 
+          "time": 2700, 
+          "sources": ["module", "pathfinder"] 
+        }
+      }
+    }
+  },
+  "settings": {
+    "fontSize": 16,
+    "fontFamily": "'Inter', sans-serif"
+  }
+}
+```
+
+## Developer Notes
+- **Paths**: ALWAYS use `/js/file.js` and `/css/file.css` in HTML imports.
+- **Time**: Inputs: Minutes. Storage: Seconds. Analytics: Minutes (1 decimal).
+- **Service Worker**: Currently `v18` (cache version `studylog-v18`). Updates require cache busting.
+- **PWA Integrity**: Keep `manifest.json`, `sw.js`, and `icon.jpeg` in the root for Vercel discovery. PWA app icons and favicons map to local `icon.jpeg`.
+- **Benchmarks**: Target density varies by source (e.g., Pathfinder: 15m/q, Module: 2m/q). Density stats show dynamic status badges (Speedy, On Track, Slow) relative to target.
+- **Validation**: `js/app.js` blocks submissions with 0 quantity or 0 duration, and clears zero inputs on focus.
+- **Import Blueprint**: See `import.txt` for manual JSON editing guide.

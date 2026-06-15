@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="theme-color" content="#0A0A0A">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/jpeg" href="icon.jpeg">
+    <script>
+        tailwind = { theme: { extend: { colors: { background: '#0A0A0A', surface: '#141414', primary: '#FFFFFF' } } } }
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/advice.css">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <title>Study.Log - Performance</title>
+</head>
+<body class="spacer-pb">
+    <header class="w-full px-4 pt-4 flex justify-between items-center">
+        <h1 class="text-xl font-bold uppercase tracking-[0.2em] text-white">Performance</h1>
+        <div class="flex items-center bg-transparent border border-white/10 rounded-full px-3 py-1">
+            <button id="week-prev" class="text-[10px] font-black text-gray-400 hover:text-white px-2 cursor-pointer">←</button>
+            <span id="week-label" class="text-[9px] text-gray-300 uppercase tracking-widest font-bold">This Week</span>
+            <button id="week-next" class="text-[10px] font-black text-gray-400 hover:text-white px-2 cursor-pointer" disabled>→</button>
+        </div>
+    </header>
+
+    <main class="px-4 pt-4 w-full">
+        <div class="m3-grid m3-grid-responsive gap-4">
+            <!-- Hero Card: Total Questions solved (KPI Accent Card Lime) -->
+            <section class="m3-card kpi-accent-card-lime lg:col-span-3 flex flex-col justify-between min-h-[140px]">
+                <span class="card-title">Total Questions</span>
+                <div class="flex-col-center-justify my-2">
+                    <div class="flex items-baseline gap-2">
+                        <span id="reps-val" class="kpi-value">0</span>
+                        <span id="reps-suffix" class="text-xl lg:text-3xl font-bold uppercase"></span>
+                    </div>
+                </div>
+                <span class="sublabel lg:text-sm">Lifetime questions recorded</span>
+            </section>
+ 
+            <!-- Chart Card: Weekly Reps (Dark Chart Card) -->
+            <section class="m3-card lg:col-span-2 flex flex-col gap-4">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-gray-400">query_stats</span>
+                        <h3 id="progress-label" class="text-xs uppercase tracking-widest text-gray-300 font-bold cursor-pointer hover:text-white transition-colors">Progress</h3>
+                    </div>
+                    <span id="weekly-reps-text" class="text-xs font-black text-[#AAFF00] bg-[#AAFF00]/10 px-2.5 py-1 rounded-full">+0 This Week</span>
+                </div>
+                <div id="graph-wrapper" class="h-48 w-full relative pt-2">
+                    <div id="reps-graph" class="h-full w-full"></div>
+                </div>
+            </section>
+ 
+            <!-- Chart Card: Time Spent (Featured Chart Card Orange) -->
+            <section class="m3-card kpi-accent-card-orange flex flex-col gap-4">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-white/80">schedule</span>
+                        <h3 class="text-xs uppercase tracking-widest text-white/80 font-bold">Time Spent</h3>
+                    </div>
+                    <span class="status-badge bg-black/20 text-white border-0 font-bold">This Week</span>
+                </div>
+                <div class="h-48 w-full relative pt-2">
+                    <div id="time-graph" class="h-full w-full"></div>
+                </div>
+            </section>
+ 
+            <!-- History Section -->
+            <section class="m3-card flex flex-col gap-4 lg:col-span-1">
+                <h3 class="text-xs uppercase tracking-widest text-gray-400 font-bold">History</h3>
+                <div class="relative">
+                    <div id="chapters-list" class="space-y-3 lg:max-h-[380px] lg:overflow-y-auto lg:pr-1 custom-scrollbar"></div>
+                    <div id="history-expansion" class="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-[#141414] to-transparent flex items-end justify-center pb-2 hidden">
+                        <button id="expand-history-btn" class="bg-white/10 hover:bg-white/20 text-white rounded-full p-2 backdrop-blur-md transition-all border border-white/10 flex items-center justify-center cursor-pointer">
+                             <span class="material-symbols-outlined block">expand_more</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+ 
+            <!-- Subject Distribution Section -->
+            <section class="m3-card flex flex-col gap-4 lg:col-span-2">
+                <div class="flex justify-between items-center border-b border-white/5 pb-2">
+                    <h3 class="text-xs uppercase tracking-widest text-gray-400 font-bold">Distribution</h3>
+                    <div class="flex items-center gap-2">
+                        <button id="toggle-distribution" class="filter-pill">Subjects</button>
+                        <select id="sort-distribution" class="filter-pill">
+                            <option value="reps-desc">Most Questions</option>
+                            <option value="reps-asc">Least Questions</option>
+                            <option value="weight-desc">Most Weightage</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="subject-distribution" class="space-y-4 lg:max-h-[380px] lg:overflow-y-auto lg:pr-1 custom-scrollbar"></div>
+            </section>
+ 
+            <!-- Question Density Section -->
+            <section class="m3-card lg:col-span-3 flex flex-col gap-6">
+                <div class="flex items-center justify-between border-b border-white/5 pb-3">
+                    <h3 class="text-xs uppercase tracking-widest text-gray-400 font-bold">Question Density (Time / Q)</h3>
+                    <div class="flex items-center gap-2">
+                        <span class="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Overall:</span>
+                        <span id="overall-density" class="text-lg font-black text-white">0.0m</span>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Physics Card -->
+                    <div class="bg-[#1C1C1C] border border-white/5 rounded-[18px] p-5 flex flex-col justify-between min-h-[160px] lg:min-h-[220px]">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-black uppercase tracking-widest text-[#7BBFDF]">Physics</span>
+                            <button onclick="StatsController.showDensityTrend('Physics')" class="flex items-center justify-center w-7 h-7 rounded-full bg-[#7BBFDF]/10 text-[#7BBFDF] hover:bg-[#7BBFDF]/25 transition-all cursor-pointer">
+                                <span class="material-symbols-outlined text-[16px]">monitoring</span>
+                            </button>
+                        </div>
+                        <div class="my-4 flex items-baseline justify-between">
+                            <div class="flex items-baseline gap-1">
+                                <span id="density-val-physics" class="text-4xl lg:text-5xl font-extrabold tracking-tight text-white">0.0</span>
+                                <span class="text-[9px] text-gray-500 uppercase tracking-wider font-bold">min/q</span>
+                            </div>
+                            <div class="flex flex-col items-end gap-1">
+                                <span id="target-val-physics" class="text-[9px] text-gray-500 uppercase font-black tracking-wider">Target: 2-4m</span>
+                                <span id="status-val-physics" class="status-badge">No Data</span>
+                            </div>
+                        </div>
+                        <div class="border-t border-white/5 pt-3 flex items-center justify-between gap-1.5">
+                            <div class="flex items-center gap-1 min-w-0 flex-1">
+                                <span class="material-symbols-outlined text-[12px] text-gray-600">menu_book</span>
+                                <select id="density-chapter-physics" class="bg-transparent border-0 text-[10px] text-gray-400 font-medium outline-none cursor-pointer w-full truncate pr-1">
+                                    <option value="all" class="bg-[#1C1C1C] text-white">All Chapters</option>
+                                </select>
+                            </div>
+                            <div class="h-4 w-px bg-white/5"></div>
+                            <div class="flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[12px] text-gray-600">source</span>
+                                <select id="density-source-physics" class="bg-transparent border-0 text-[10px] text-gray-400 font-medium outline-none cursor-pointer pr-1">
+                                    <option value="total" class="bg-[#1C1C1C] text-white">All Sources</option>
+                                    <option value="module" class="bg-[#1C1C1C] text-white">Module</option>
+                                    <option value="pathfinder" class="bg-[#1C1C1C] text-white">Pathfinder</option>
+                                    <option value="kota" class="bg-[#1C1C1C] text-white">Kota</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+ 
+                    <!-- Mathematics Card -->
+                    <div class="bg-[#1C1C1C] border border-white/5 rounded-[18px] p-5 flex flex-col justify-between min-h-[160px] lg:min-h-[220px]">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-black uppercase tracking-widest text-[#E8943A]">Mathematics</span>
+                            <button onclick="StatsController.showDensityTrend('Mathematics')" class="flex items-center justify-center w-7 h-7 rounded-full bg-[#E8943A]/10 text-[#E8943A] hover:bg-[#E8943A]/25 transition-all cursor-pointer">
+                                <span class="material-symbols-outlined text-[16px]">monitoring</span>
+                            </button>
+                        </div>
+                        <div class="my-4 flex items-baseline justify-between">
+                            <div class="flex items-baseline gap-1">
+                                <span id="density-val-mathematics" class="text-4xl lg:text-5xl font-extrabold tracking-tight text-white">0.0</span>
+                                <span class="text-[9px] text-gray-500 uppercase tracking-wider font-bold">min/q</span>
+                            </div>
+                            <div class="flex flex-col items-end gap-1">
+                                <span id="target-val-mathematics" class="text-[9px] text-gray-500 uppercase font-black tracking-wider">Target: 3-5m</span>
+                                <span id="status-val-mathematics" class="status-badge">No Data</span>
+                            </div>
+                        </div>
+                        <div class="border-t border-white/5 pt-3 flex items-center justify-between gap-1.5">
+                            <div class="flex items-center gap-1 min-w-0 flex-1">
+                                <span class="material-symbols-outlined text-[12px] text-gray-600">menu_book</span>
+                                <select id="density-chapter-mathematics" class="bg-transparent border-0 text-[10px] text-gray-400 font-medium outline-none cursor-pointer w-full truncate pr-1">
+                                    <option value="all" class="bg-[#1C1C1C] text-white">All Chapters</option>
+                                </select>
+                            </div>
+                            <div class="h-4 w-px bg-white/5"></div>
+                            <div class="flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[12px] text-gray-600">source</span>
+                                <select id="density-source-mathematics" class="bg-transparent border-0 text-[10px] text-gray-400 font-medium outline-none cursor-pointer pr-1">
+                                    <option value="total" class="bg-[#1C1C1C] text-white">All Sources</option>
+                                    <option value="module" class="bg-[#1C1C1C] text-white">Module</option>
+                                    <option value="blackbook" class="bg-[#1C1C1C] text-white">Blackbook</option>
+                                    <option value="kota" class="bg-[#1C1C1C] text-white">Kota</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+ 
+                    <!-- Chemistry Card -->
+                    <div class="bg-[#1C1C1C] border border-white/5 rounded-[18px] p-5 flex flex-col justify-between min-h-[160px] lg:min-h-[220px]">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-black uppercase tracking-widest text-[#B8E04A]">Chemistry</span>
+                            <button onclick="StatsController.showDensityTrend('Chemistry')" class="flex items-center justify-center w-7 h-7 rounded-full bg-[#B8E04A]/10 text-[#B8E04A] hover:bg-[#B8E04A]/25 transition-all cursor-pointer">
+                                <span class="material-symbols-outlined text-[16px]">monitoring</span>
+                            </button>
+                        </div>
+                        <div class="my-4 flex items-baseline justify-between">
+                            <div class="flex items-baseline gap-1">
+                                <span id="density-val-chemistry" class="text-4xl lg:text-5xl font-extrabold tracking-tight text-white">0.0</span>
+                                <span class="text-[9px] text-gray-500 uppercase tracking-wider font-bold">min/q</span>
+                            </div>
+                            <div class="flex flex-col items-end gap-1">
+                                <span id="target-val-chemistry" class="text-[9px] text-gray-500 uppercase font-black tracking-wider">Target: 1-2m</span>
+                                <span id="status-val-chemistry" class="status-badge">No Data</span>
+                            </div>
+                        </div>
+                        <div class="border-t border-white/5 pt-3 flex items-center justify-between gap-1.5">
+                            <div class="flex items-center gap-1 min-w-0 flex-1">
+                                <span class="material-symbols-outlined text-[12px] text-gray-600">menu_book</span>
+                                <select id="density-chapter-chemistry" class="bg-transparent border-0 text-[10px] text-gray-400 font-medium outline-none cursor-pointer w-full truncate pr-1">
+                                    <option value="all" class="bg-[#1C1C1C] text-white">All Chapters</option>
+                                </select>
+                            </div>
+                            <div class="h-4 w-px bg-white/5"></div>
+                            <div class="flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[12px] text-gray-600">source</span>
+                                <select id="density-source-chemistry" class="bg-transparent border-0 text-[10px] text-gray-400 font-medium outline-none cursor-pointer pr-1">
+                                    <option value="total" class="bg-[#1C1C1C] text-white">All Sources</option>
+                                    <option value="module" class="bg-[#1C1C1C] text-white">Module</option>
+                                    <option value="kota" class="bg-[#1C1C1C] text-white">Kota</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+ 
+            <!-- Insights & Advice Section -->
+            <section class="m3-card lg:col-span-3 flex flex-col gap-4">
+                <div class="flex items-center justify-between border-b border-white/5 pb-2">
+                    <h3 class="text-xs uppercase tracking-widest text-gray-400 font-bold">Insights & Advice</h3>
+                    <div id="advice-nav" class="flex items-center gap-4 hidden">
+                        <button id="advice-prev" class="text-gray-500 hover:text-white transition-colors disabled:opacity-20 cursor-pointer">
+                            <span class="material-symbols-outlined">chevron_left</span>
+                        </button>
+                        <span id="advice-page" class="text-[10px] text-gray-500 uppercase font-black tracking-widest">1 / 3</span>
+                        <button id="advice-next" class="text-gray-500 hover:text-white transition-colors disabled:opacity-20 cursor-pointer">
+                            <span class="material-symbols-outlined">chevron_right</span>
+                        </button>
+                    </div>
+                </div>
+                <div id="advice-container" class="min-h-[140px] flex items-center justify-center"></div>
+            </section>
+        </div>
+    </main>
+ 
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <!-- Logo block (hidden on mobile) -->
+        <div class="hidden lg:flex items-center gap-3 mb-8 px-4">
+            <span class="text-xl font-bold uppercase tracking-[0.2em] text-white">Study.Log</span>
+        </div>
+
+        <button onclick="window.location.href='index.html'" class="nav-item">
+            <span class="material-symbols-outlined">timer</span>
+            <span class="nav-label hidden lg:inline">Tracker</span>
+        </button>
+        <button onclick="window.location.href='practice.html'" class="nav-item">
+            <span class="material-symbols-outlined">shuffle</span>
+            <span class="nav-label hidden lg:inline">Practice</span>
+        </button>
+        <button class="nav-item active">
+            <span class="material-symbols-outlined">bar_chart</span>
+            <span class="nav-label hidden lg:inline">Performance</span>
+        </button>
+        <button onclick="window.location.href='settings.html'" class="nav-item">
+            <span class="material-symbols-outlined">settings</span>
+            <span class="nav-label hidden lg:inline">Settings</span>
+        </button>
+    </nav>
+
+    <!-- Subject Density Trend Modal -->
+    <div id="density-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md flex items-center justify-center z-[100] hidden opacity-0 transition-all duration-300">
+        <div class="bg-[#141414] border border-white/5 rounded-[22px] p-6 w-full max-w-xl mx-4 flex flex-col gap-6 relative shadow-2xl">
+            <!-- Header -->
+            <div class="flex justify-between items-start border-b border-white/5 pb-4">
+                <div class="flex flex-col gap-1">
+                    <h3 id="modal-subject-title" class="text-lg font-black uppercase tracking-widest text-white">Subject Trend</h3>
+                    <p class="text-[9px] text-gray-500 uppercase tracking-widest font-black">Density over time (minutes per question)</p>
+                </div>
+            </div>
+            
+            <!-- Source Pills (Bubble-like buttons) -->
+            <div class="flex flex-col gap-2">
+                <span class="text-[9px] text-gray-500 uppercase font-black tracking-widest">Select Source:</span>
+                <div id="modal-source-pills" class="flex flex-wrap gap-2"></div>
+            </div>
+            
+            <!-- Chart Canvas -->
+            <div class="h-60 w-full relative bg-black/40 rounded-[14px] border border-white/5 p-2">
+                <canvas id="density-trend-canvas"></canvas>
+            </div>
+            
+            <!-- Close Cross Button -->
+            <div class="flex justify-end pt-1">
+                <button id="close-modal-btn" class="flex items-center justify-center w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 transition-all text-white border border-white/10 cursor-pointer">
+                    <span class="material-symbols-outlined text-lg">close</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- External Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1"></script>
+
+    <!-- Modular JS -->
+    <script src="js/storage.js"></script>
+    <script src="js/jee_data.js"></script>
+    <script src="js/chapter_validator.js"></script>
+    <script src="js/analytics.js"></script>
+    <script src="js/graphs.js"></script>
+    <script src="js/history.js"></script>
+    <script src="js/distribution.js"></script>
+    <script src="js/advice.js"></script>
+    <script src="js/stats.js"></script>
+    <script src="js/chart_check.js"></script>
+</body>
+</html>

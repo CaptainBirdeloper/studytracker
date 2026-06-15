@@ -1,0 +1,232 @@
+{
+  "history": {
+    "2026-04-22": {
+      "reps": 25,
+      "time": 3600,
+      "chapters": {
+        "kinematics": { "reps": 15, "time": 1800, "sources": ["module"] },
+        "mole concept": { "reps": 10, "time": 1800, "sources": ["kota"] }
+      }
+    },
+    "2026-04-23": {
+      "reps": 12,
+      "time": 7200,
+      "chapters": {
+        "newton's laws": { "reps": 12, "time": 7200, "sources": ["pathfinder"] }
+      }
+    },
+    "2026-04-24": {
+      "reps": 30,
+      "time": 5400,
+      "chapters": {
+        "atomic structure": { "reps": 20, "time": 2400, "sources": ["module"] },
+        "sets": { "reps": 10, "time": 3000, "sources": ["kota"] }
+      }
+    },
+    "2026-04-25": {
+      "reps": 15,
+      "time": 5400,
+      "chapters": {
+        "quadratic equations": { "reps": 15, "time": 5400, "sources": ["blackbook"] }
+      }
+    },
+    "2026-04-26": {
+      "reps": 40,
+      "time": 7200,
+      "chapters": {
+        "vectors": { "reps": 20, "time": 3600, "sources": ["module"] },
+        "chemical bonding": { "reps": 20, "time": 3600, "sources": ["module"] }
+      }
+    },
+    "2026-04-27": {
+      "reps": 10,
+      "time": 6000,
+      "chapters": {
+        "work power energy": { "reps": 10, "time": 6000, "sources": ["pathfinder"] }
+      }
+    },
+    "2026-04-28": {
+      "reps": 35,
+      "time": 4800,
+      "chapters": {
+        "periodicity": { "reps": 25, "time": 1800, "sources": ["kota"] },
+        "sequence and series": { "reps": 10, "time": 3000, "sources": ["module"] }
+      }
+    },
+    "2026-04-29": {
+      "reps": 20,
+      "time": 7200,
+      "chapters": {
+        "trigonometry": { "reps": 20, "time": 7200, "sources": ["blackbook"] }
+      }
+    },
+    "2026-04-30": {
+      "reps": 50,
+      "time": 9000,
+      "chapters": {
+        "thermodynamics": { "reps": 25, "time": 4500, "sources": ["module"] },
+        "equilibrium": { "reps": 25, "time": 4500, "sources": ["module"] }
+      }
+    },
+    "2026-05-01": {
+      "reps": 15,
+      "time": 3600,
+      "chapters": {
+        "complex numbers": { "reps": 15, "time": 3600, "sources": ["kota"] }
+      }
+    },
+    "2026-05-02": {
+      "reps": 8,
+      "time": 5400,
+      "chapters": {
+        "rotational mechanics": { "reps": 8, "time": 5400, "sources": ["pathfinder"] }
+      }
+    },
+    "2026-05-03": {
+      "reps": 45,
+      "time": 6000,
+      "chapters": {
+        "s-block": { "reps": 30, "time": 2400, "sources": ["module"] },
+        "probability": { "reps": 15, "time": 3600, "sources": ["module"] }
+      }
+    },
+    "2026-05-04": {
+      "reps": 20,
+      "time": 5400,
+      "chapters": {
+        "differentiation": { "reps": 20, "time": 5400, "sources": ["blackbook"] }
+      }
+    },
+    "2026-05-05": {
+      "reps": 30,
+      "time": 5400,
+      "chapters": {
+        "electrostatics": { "reps": 15, "time": 3600, "sources": ["kota"] },
+        "p-block": { "reps": 15, "time": 1800, "sources": ["module"] }
+      }
+    },
+    "2026-05-06": {
+      "reps": 25,
+      "time": 4500,
+      "chapters": {
+        "integration": { "reps": 25, "time": 4500, "sources": ["module"] }
+      }
+    },
+    "2026-05-07": {
+      "reps": 12,
+      "time": 7200,
+      "chapters": {
+        "current electricity": { "reps": 12, "time": 7200, "sources": ["pathfinder"] }
+      }
+    },
+    "2026-05-08": {
+      "reps": 40,
+      "time": 5400,
+      "chapters": {
+        "hydrocarbons": { "reps": 20, "time": 1800, "sources": ["kota"] },
+        "limits": { "reps": 20, "time": 3600, "sources": ["kota"] }
+      }
+    },
+    "2026-05-09": {
+      "reps": 18,
+      "time": 6300,
+      "chapters": {
+        "application of derivatives": { "reps": 18, "time": 6300, "sources": ["blackbook"] }
+      }
+    },
+    "2026-05-10": {
+      "reps": 55,
+      "time": 8100,
+      "chapters": {
+        "magnetism": { "reps": 25, "time": 4500, "sources": ["module"] },
+        "d and f block": { "reps": 30, "time": 3600, "sources": ["module"] }
+      }
+    },
+    "2026-05-11": {
+      "reps": 22,
+      "time": 4500,
+      "chapters": {
+        "straight lines": { "reps": 22, "time": 4500, "sources": ["kota"] }
+      }
+    },
+    "2026-05-12": {
+      "reps": 9,
+      "time": 6300,
+      "chapters": {
+        "fluid mechanics": { "reps": 9, "time": 6300, "sources": ["pathfinder"] }
+      }
+    },
+    "2026-05-13": {
+      "reps": 38,
+      "time": 5400,
+      "chapters": {
+        "haloalkanes": { "reps": 20, "time": 1800, "sources": ["module"] },
+        "circles": { "reps": 18, "time": 3600, "sources": ["module"] }
+      }
+    },
+    "2026-05-14": {
+      "reps": 14,
+      "time": 5400,
+      "chapters": {
+        "definite integration": { "reps": 14, "time": 5400, "sources": ["blackbook"] }
+      }
+    },
+    "2026-05-15": {
+      "reps": 42,
+      "time": 6300,
+      "chapters": {
+        "optics": { "reps": 20, "time": 4500, "sources": ["kota"] },
+        "biomolecules": { "reps": 22, "time": 1800, "sources": ["kota"] }
+      }
+    },
+    "2026-05-16": {
+      "reps": 28,
+      "time": 4500,
+      "chapters": {
+        "differential equations": { "reps": 28, "time": 4500, "sources": ["module"] }
+      }
+    },
+    "2026-05-17": {
+      "reps": 15,
+      "time": 8100,
+      "chapters": {
+        "modern physics": { "reps": 15, "time": 8100, "sources": ["pathfinder"] }
+      }
+    },
+    "2026-05-18": {
+      "reps": 48,
+      "time": 6300,
+      "chapters": {
+        "coordination compounds": { "reps": 24, "time": 2700, "sources": ["module"] },
+        "conic sections": { "reps": 24, "time": 3600, "sources": ["module"] }
+      }
+    },
+    "2026-05-19": {
+      "reps": 21,
+      "time": 6300,
+      "chapters": {
+        "area under curves": { "reps": 21, "time": 6300, "sources": ["blackbook"] }
+      }
+    },
+    "2026-05-20": {
+      "reps": 36,
+      "time": 5400,
+      "chapters": {
+        "wave optics": { "reps": 16, "time": 3600, "sources": ["kota"] },
+        "polymers": { "reps": 20, "time": 1800, "sources": ["kota"] }
+      }
+    },
+    "2026-05-21": {
+      "reps": 32,
+      "time": 5400,
+      "chapters": {
+        "3d geometry": { "reps": 32, "time": 5400, "sources": ["module"] }
+      }
+    }
+  },
+  "totalReps": 780,
+  "settings": {
+    "fontSize": 16,
+    "fontFamily": "'Inter', sans-serif"
+  }
+}

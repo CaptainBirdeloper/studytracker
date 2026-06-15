@@ -1,0 +1,140 @@
+.font-variation-fill {
+    font-variation-settings: 'FILL' 1;
+}
+
+@keyframes roll {
+    0% { transform: rotate(0deg) scale(1); }
+    25% { transform: rotate(90deg) scale(1.1); }
+    50% { transform: rotate(180deg) scale(0.9); }
+    75% { transform: rotate(270deg) scale(1.1); }
+    100% { transform: rotate(360deg) scale(1); }
+}
+
+.dice-rolling {
+    animation: roll 0.6s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+}
+
+.result-card {
+    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+@keyframes slideUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.subject-badge {
+    padding: 3px 10px;
+    border-radius: var(--radius-pill);
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+/* Casino roll dice button: floating, glowing */
+.roll-dice-btn {
+  width: 72px;
+  height: 72px;
+  background-color: var(--accent-orange);
+  color: var(--text-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(255, 101, 0, 0.4);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.roll-dice-btn:hover {
+  background-color: #ff7f2a;
+  transform: scale(1.05) rotate(10deg);
+  box-shadow: 0 0 30px rgba(255, 101, 0, 0.6);
+}
+.roll-dice-btn:active {
+  transform: scale(0.95);
+}
+
+/* Practice Session Checklist */
+.practice-q-row {
+  background-color: var(--surface) !important;
+  border: 1px solid rgba(255, 255, 255, 0.04) !important;
+  border-radius: var(--radius-inner);
+  padding: 14px 20px !important;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+.practice-q-row:hover {
+  background-color: var(--surface-alt) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+.practice-q-row.checked {
+  background-color: rgba(170, 255, 0, 0.04) !important;
+  border-color: rgba(170, 255, 0, 0.15) !important;
+}
+
+/* Custom Checkbox */
+.practice-checkbox {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  color: transparent;
+  font-size: 14px;
+}
+.practice-q-row.checked .practice-checkbox {
+  background-color: var(--accent-lime);
+  border-color: var(--accent-lime);
+  color: #000000;
+}
+
+.practice-q-text {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+}
+.practice-q-row.checked .practice-q-text {
+  color: var(--text-secondary);
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+/* Practice Progress Track */
+.practice-progress-track {
+  height: 8px;
+  background-color: rgba(255, 255, 255, 0.04);
+  border-radius: 100px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+.practice-progress-fill {
+  height: 100%;
+  background-color: var(--accent-lime);
+  width: 0%;
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (min-width: 1024px) {
+  .roll-dice-btn {
+    width: 96px !important;
+    height: 96px !important;
+    box-shadow: 0 0 30px rgba(255, 101, 0, 0.4) !important;
+  }
+  .roll-dice-btn .material-symbols-outlined {
+    font-size: 48px !important;
+  }
+}

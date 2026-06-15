@@ -1,0 +1,42 @@
+# JEE Practice Probability Sheet
+# Mapping: Weightage (1-10) -> Probability Multiplier
+# High Yield = High Probability
+
+[Weightage Mapping]
+10: 1.00 (Max)
+9:  0.85
+8:  0.70
+7:  0.55
+6:  0.40
+5:  0.30
+Mean: 0.50 (For unlisted/general chapters)
+
+[Calculated Probabilities]
+- Calculus: 10/10 (100%)
+- Vectors and 3D: 10/10 (100%)
+- Mechanics: 10/10 (100%)
+- Electrodynamics: 10/10 (100%)
+- Organic Chemistry: 10/10 (100%)
+- Algebra: 9/10 (85%)
+- Coordinate Geometry: 9/10 (85%)
+- Modern Physics: 9/10 (85%)
+- Electrostatics: 9/10 (85%)
+- Physical Chemistry: 9/10 (85%)
+- Inorganic Chemistry: 9/10 (85%)
+- Coordination Compounds: 9/10 (85%)
+- Matrices: 8/10 (70%)
+- Determinants: 8/10 (70%)
+- Optics: 8/10 (70%)
+- Magnetism: 8/10 (70%)
+- Chemical Bonding: 8/10 (70%)
+- Probability (Math): 7/10 (55%)
+- Thermodynamics (Phy/Che): 7/10 (55%)
+- Chemical Kinetics: 7/10 (55%)
+- Equilibrium: 7/10 (55%)
+- Sequences: 6/10 (40%)
+
+[Application Logic]
+The practice mode will now use a "Weighted Random Selection" algorithm. 
+Instead of every question having a 1/N chance, questions in High Yield chapters 
+will have their "tickets" multiplied by their weightage factor.
+Example: A Calculus question is ~2.5x more likely to appear than a Sequence question.

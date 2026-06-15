@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="theme-color" content="#0A0A0A">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/jpeg" href="icon.jpeg">
+    <script>
+        tailwind = { theme: { extend: { colors: { background: '#0A0A0A', surface: '#141414', primary: '#FFFFFF' } } } }
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/practice.css">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <title>Study.Log - Practice</title>
+</head>
+<body class="spacer-pb">
+    <header class="w-full px-4 pt-8 pb-4 flex justify-between items-center lg:hidden">
+        <h1 class="text-xl font-bold uppercase tracking-[0.2em] text-white">Random Practice</h1>
+    </header>
+
+    <main class="px-4 pt-4 w-full">
+        <div class="m3-grid m3-grid-responsive gap-4">
+            <!-- Configuration Panel -->
+            <div class="lg:col-span-2 flex flex-col gap-4 justify-center py-4">
+                <span class="card-title text-gray-500">Configuration</span>
+                
+                <div class="settings-row settings-row-interactive flex-col md:flex-row items-stretch md:items-center gap-4">
+                    <div class="flex flex-col flex-1">
+                        <span class="settings-row-label">Question Range</span>
+                        <span class="settings-row-desc">Start (X) and End (Y) bounds</span>
+                    </div>
+                    <div class="flex items-center gap-3 flex-1 min-w-[200px]">
+                        <input id="min-q" type="number" value="1" class="m3-input w-full text-center font-bold py-3 px-4 text-sm rounded-xl border border-white/5 bg-[#141414]" placeholder="Start"/>
+                        <span class="text-gray-500">to</span>
+                        <input id="max-q" type="number" value="50" class="m3-input w-full text-center font-bold py-3 px-4 text-sm rounded-xl border border-white/5 bg-[#141414]" placeholder="End"/>
+                    </div>
+                </div>
+
+                <div class="settings-row settings-row-interactive flex-col md:flex-row items-stretch md:items-center gap-4">
+                    <div class="flex flex-col flex-1">
+                        <span class="settings-row-label">Set Size</span>
+                        <span class="settings-row-desc">Number of problems to pick</span>
+                    </div>
+                    <div class="flex-1 min-w-[200px]">
+                        <input id="set-count" type="number" value="5" min="1" class="m3-input w-full text-center font-bold py-3 px-4 text-sm rounded-xl border border-white/5 bg-[#141414]"/>
+                    </div>
+                </div>
+
+                <div class="settings-row settings-row-interactive flex-col md:flex-row items-stretch md:items-center gap-4">
+                    <div class="flex flex-col flex-1">
+                        <span class="settings-row-label">Practice Mode</span>
+                        <span class="settings-row-desc">Weighted (JEE Weight) vs Uniform Random</span>
+                    </div>
+                    <div class="flex bg-[#1C1C1C] border border-white/5 rounded-xl p-1 flex-1 min-w-[200px]">
+                        <label class="flex-1 cursor-pointer select-none">
+                            <input type="radio" name="practice-mode" value="weighted" checked class="hidden peer">
+                            <div class="py-2.5 text-center rounded-lg text-gray-400 font-bold uppercase tracking-widest text-[9px] transition-all peer-checked:bg-white peer-checked:text-black peer-checked:shadow-sm">
+                                Weighted
+                            </div>
+                        </label>
+                        <label class="flex-1 cursor-pointer select-none">
+                            <input type="radio" name="practice-mode" value="random" class="hidden peer">
+                            <div class="py-2.5 text-center rounded-lg text-gray-400 font-bold uppercase tracking-widest text-[9px] transition-all peer-checked:bg-white peer-checked:text-black peer-checked:shadow-sm">
+                                Random
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Dice Button -->
+                <div class="flex justify-center py-4">
+                    <button id="roll-btn" class="roll-dice-btn active:scale-95 transition-all">
+                        <span class="material-symbols-outlined text-4xl font-variation-fill">casino</span>
+                    </button>
+                </div>
+            </div>
+ 
+            <!-- Results Display -->
+            <div class="lg:col-span-1 flex flex-col gap-4 py-4">
+                <span class="card-title text-gray-500">Practice Session</span>
+                <div id="results-container" class="space-y-4 w-full">
+                    <!-- Dynamic session board will be injected here -->
+                    <div class="bg-[#141414] border border-white/5 rounded-2xl p-6 text-center">
+                        <p class="text-gray-500 text-sm">Roll the dice to generate a practice set</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <!-- Logo block (hidden on mobile) -->
+        <div class="hidden lg:flex items-center gap-3 mb-8 px-4">
+            <span class="text-xl font-bold uppercase tracking-[0.2em] text-white">Study.Log</span>
+        </div>
+
+        <button onclick="window.location.href='index.html'" class="nav-item">
+            <span class="material-symbols-outlined">timer</span>
+            <span class="nav-label hidden lg:inline">Tracker</span>
+        </button>
+        <button class="nav-item active">
+            <span class="material-symbols-outlined">shuffle</span>
+            <span class="nav-label hidden lg:inline">Practice</span>
+        </button>
+        <button onclick="window.location.href='stats.html'" class="nav-item">
+            <span class="material-symbols-outlined">bar_chart</span>
+            <span class="nav-label hidden lg:inline">Performance</span>
+        </button>
+        <button onclick="window.location.href='settings.html'" class="nav-item">
+            <span class="material-symbols-outlined">settings</span>
+            <span class="nav-label hidden lg:inline">Settings</span>
+        </button>
+    </nav>
+
+    <!-- Modular JS -->
+    <script src="js/jee_data.js"></script>
+    <script src="js/chapter_validator.js"></script>
+    <script src="js/practice.js"></script>
+</body>
+</html>
