@@ -254,6 +254,12 @@ const AdviceEngine = {
 
         if (!container) return;
 
+        // Clear existing card classes from the parent section
+        const section = container.closest('section');
+        if (section) {
+            section.classList.remove('card-strength', 'card-warning', 'card-danger', 'card-info');
+        }
+
         if (this.allAdvice.length === 0) {
             container.innerHTML = '<p class="text-gray-500 text-sm text-center py-8">Your prep is balanced. Keep logging to unlock more insights!</p>';
             if (nav) nav.classList.add('hidden');
@@ -268,6 +274,11 @@ const AdviceEngine = {
         if (prevBtn) prevBtn.disabled = this.currentIndex === 0;
 
         const advice = this.allAdvice[this.currentIndex];
+
+        // Apply card class to the parent section
+        if (section) {
+            section.classList.add(`card-${advice.type}`);
+        }
         
         // Build inline micro-visual block
         let visualHtml = '';
@@ -276,31 +287,32 @@ const AdviceEngine = {
             if (m.type === 'progress') {
                 const pct = Math.min(100, (m.val / m.target) * 100);
                 visualHtml = `
-                    <div class="advice-visual">
-                        <div class="flex justify-between items-center text-[10px] text-gray-500 uppercase tracking-widest font-black mb-1.5">
-                            <span>${m.label}</span>
-                            <span>${m.val} / ${m.target} Qs</span>
-                        </div>
-                        <div class="visual-bar-track">
-                            <div class="visual-bar-fill" style="width: ${pct}%; background-color: var(--accent-lime);"></div>
+                    <div class="advice-gradient-container space-y-4">
+                        <span class="text-[10px] uppercase tracking-widest text-gray-400 font-extrabold block leading-none">${m.label.toUpperCase()}</span>
+                        <div class="capsule-row">
+                            <div class="capsule-fill" data-pct="${pct}" style="width: 0%; background-color: var(--accent-lime);">
+                                <span>QS</span>
+                                <span class="material-symbols-outlined text-[14px]" style="font-variation-fill: 1">analytics</span>
+                            </div>
+                            <span class="capsule-qty">${m.val} / ${m.target}</span>
                         </div>
                     </div>
                 `;
             } else if (m.type === 'balance') {
                 const maxReps = Math.max(...m.data.map(d => d.reps), 1);
                 visualHtml = `
-                    <div class="advice-visual space-y-2">
-                        <span class="text-[9px] uppercase tracking-widest text-gray-500 font-black block">Subject Log Comparison</span>
-                        <div class="space-y-2">
+                    <div class="advice-gradient-container space-y-4">
+                        <span class="text-[10px] uppercase tracking-widest text-gray-400 font-extrabold block leading-none">SUBJECT LOG COMPARISON</span>
+                        <div class="space-y-2.5">
                             ${m.data.map(d => {
                                 const pct = Math.min(100, (d.reps / maxReps) * 100);
                                 return `
-                                    <div class="flex items-center gap-3">
-                                        <span class="text-[9px] font-black text-gray-400 w-8">${d.name.substring(0, 3).toUpperCase()}</span>
-                                        <div class="flex-grow visual-bar-track">
-                                            <div class="visual-bar-fill" style="width: ${pct}%; background-color: ${d.color};"></div>
+                                    <div class="capsule-row">
+                                        <div class="capsule-fill" data-pct="${pct}" style="width: 0%; background-color: ${d.color};">
+                                            <span>${d.name.substring(0, 3).toUpperCase()}</span>
+                                            <span class="material-symbols-outlined text-[14px]" style="font-variation-fill: 1">balance</span>
                                         </div>
-                                        <span class="text-[10px] font-bold text-white w-8 text-right">${d.reps} Qs</span>
+                                        <span class="capsule-qty">${d.reps} Qs</span>
                                     </div>
                                 `;
                             }).join('')}
@@ -309,82 +321,78 @@ const AdviceEngine = {
                 `;
             } else if (m.type === 'pace') {
                 const maxPace = Math.max(m.userVal, m.targetVal * 2, 10);
-                const userPct = Math.min(95, Math.max(5, (m.userVal / maxPace) * 100));
-                const targetPct = Math.min(95, Math.max(5, (m.targetVal / maxPace) * 100));
+                const userPct = Math.min(100, Math.max(15, (m.userVal / maxPace) * 100));
+                const targetPct = Math.min(100, Math.max(15, (m.targetVal / maxPace) * 100));
                 visualHtml = `
-                    <div class="advice-visual">
-                        <span class="text-[9px] uppercase tracking-widest text-gray-500 font-black block mb-3">Pacing Comparison</span>
-                        <div class="space-y-4">
-                            <div class="space-y-1">
-                                <div class="flex justify-between items-center text-[10px]">
-                                    <span class="text-gray-400 font-bold">Your Pace</span>
-                                    <span class="font-black" style="color: ${m.color};">${m.userVal.toFixed(1)} min/q</span>
+                    <div class="advice-gradient-container space-y-4">
+                        <span class="text-[10px] uppercase tracking-widest text-gray-400 font-extrabold block leading-none">PACING COMPARISON</span>
+                        <div class="space-y-2.5">
+                            <div class="capsule-row">
+                                <div class="capsule-fill" data-pct="${userPct}" style="width: 0%; background-color: ${m.color};">
+                                    <span>YOU</span>
+                                    <span class="material-symbols-outlined text-[14px]" style="font-variation-fill: 1">speed</span>
                                 </div>
-                                <div class="visual-bar-track">
-                                    <div class="visual-bar-fill" style="width: ${userPct}%; background-color: ${m.color};"></div>
-                                </div>
+                                <span class="capsule-qty">${m.userVal.toFixed(1)} m/q</span>
                             </div>
-                            <div class="space-y-1">
-                                <div class="flex justify-between items-center text-[10px]">
-                                    <span class="text-gray-400 font-bold">JEE Benchmark Range</span>
-                                    <span class="font-black text-gray-400">${m.targetLabel} min/q</span>
+                            <div class="capsule-row">
+                                <div class="capsule-fill" data-pct="${targetPct}" style="width: 0%; background-color: rgba(255, 255, 255, 0.15); color: #ffffff;">
+                                    <span>TARGET</span>
+                                    <span class="material-symbols-outlined text-[14px]" style="font-variation-fill: 1">track_changes</span>
                                 </div>
-                                <div class="visual-bar-track">
-                                    <div class="visual-bar-fill" style="width: ${targetPct}%; background-color: var(--surface-alt);"></div>
-                                </div>
+                                <span class="capsule-qty">${m.targetLabel} m/q</span>
                             </div>
                         </div>
                     </div>
                 `;
             } else if (m.type === 'momentum') {
-                const total = m.now + m.last;
-                const nowPct = Math.min(100, (m.now / total) * 100);
-                const lastPct = Math.min(100, (m.last / total) * 100);
+                const maxVal = Math.max(m.now, m.last, 1);
+                const nowPct = Math.min(100, Math.max(15, (m.now / maxVal) * 100));
+                const lastPct = Math.min(100, Math.max(15, (m.last / maxVal) * 100));
                 const isUp = m.trend === 'up';
-                const trendColor = isUp ? '#AAFF00' : '#FF6500';
+                const trendColor = isUp ? 'var(--accent-lime)' : 'var(--accent-orange)';
                 const trendIcon = isUp ? 'trending_up' : 'trending_down';
 
                 visualHtml = `
-                    <div class="advice-visual flex items-center justify-between gap-6">
-                        <div class="flex-grow space-y-2.5">
-                            <span class="text-[9px] uppercase tracking-widest text-gray-500 font-black block">Weekly Momentum Comparison</span>
-                            <div class="flex items-center gap-3">
-                                <span class="text-[9px] text-gray-400 font-bold w-12">LAST WK</span>
-                                <div class="flex-grow visual-bar-track">
-                                    <div class="visual-bar-fill" style="width: ${lastPct}%; background-color: var(--surface-alt);"></div>
+                    <div class="advice-gradient-container space-y-4">
+                        <span class="text-[10px] uppercase tracking-widest text-gray-400 font-extrabold block leading-none">WEEKLY MOMENTUM</span>
+                        <div class="space-y-2.5">
+                            <div class="capsule-row">
+                                <div class="capsule-fill" data-pct="${lastPct}" style="width: 0%; background-color: rgba(255, 255, 255, 0.15); color: #ffffff;">
+                                    <span>LAST WK</span>
+                                    <span class="material-symbols-outlined text-[14px]">history</span>
                                 </div>
-                                <span class="text-[10px] font-bold text-gray-400 w-8 text-right">${m.last}</span>
+                                <span class="capsule-qty">${m.last} Qs</span>
                             </div>
-                            <div class="flex items-center gap-3">
-                                <span class="text-[9px] text-white font-black w-12">THIS WK</span>
-                                <div class="flex-grow visual-bar-track">
-                                    <div class="visual-bar-fill" style="width: ${nowPct}%; background-color: ${trendColor};"></div>
+                            <div class="capsule-row">
+                                <div class="capsule-fill" data-pct="${nowPct}" style="width: 0%; background-color: ${trendColor};">
+                                    <span>THIS WK</span>
+                                    <span class="material-symbols-outlined text-[14px]" style="font-variation-fill: 1">${trendIcon}</span>
                                 </div>
-                                <span class="text-[10px] font-black text-white w-8 text-right">${m.now}</span>
+                                <span class="capsule-qty">${m.now} Qs</span>
                             </div>
-                        </div>
-                        <div class="flex flex-col items-center justify-center border border-gray-900 rounded-xl p-3 bg-black/30 min-w-[70px]">
-                            <span class="material-symbols-outlined text-2xl" style="color: ${trendColor};">${trendIcon}</span>
-                            <span class="text-[8px] font-black uppercase tracking-widest mt-1" style="color: ${trendColor};">${isUp ? 'Gaining' : 'Lagging'}</span>
                         </div>
                     </div>
                 `;
             } else if (m.type === 'diversity') {
                 visualHtml = `
-                    <div class="advice-visual space-y-2">
-                        <span class="text-[9px] uppercase tracking-widest text-gray-500 font-black block">Source Practice Coverage</span>
-                        <div class="visual-badge-list">
-                            ${m.all.map(src => {
+                    <div class="advice-gradient-container space-y-4">
+                        <span class="text-[10px] uppercase tracking-widest text-gray-400 font-extrabold block leading-none">SOURCE PRACTICE COVERAGE</span>
+                        <div class="grid grid-cols-1 gap-2">
+                            ${m.all.slice(0, 4).map(src => {
                                 const isActive = m.active.includes(src);
                                 const label = src.charAt(0).toUpperCase() + src.slice(1);
                                 const icon = isActive ? 'check_circle' : 'cancel';
-                                const badgeClass = isActive ? 'badge-active' : 'badge-inactive';
-                                const iconColor = isActive ? '#AAFF00' : '#333333';
+                                const color = isActive ? 'var(--card-sky)' : 'rgba(255, 255, 255, 0.1)';
+                                const textColor = isActive ? '#000000' : 'rgba(255, 255, 255, 0.4)';
+                                const pct = isActive ? 100 : 0;
                                 return `
-                                    <span class="visual-badge ${badgeClass}">
-                                        <span class="material-symbols-outlined text-[10px]" style="color: ${iconColor}; font-variation-fill: 1">${icon}</span>
-                                        ${label}
-                                    </span>
+                                    <div class="capsule-row" style="opacity: ${isActive ? 1 : 0.5};">
+                                        <div class="capsule-fill" data-pct="${pct}" style="width: 0%; background-color: ${color}; color: ${textColor}; ${pct === 0 ? 'min-width: 0px !important;' : ''}">
+                                            <span>${label}</span>
+                                            <span class="material-symbols-outlined text-[14px]" style="font-variation-fill: 1">${icon}</span>
+                                        </div>
+                                        <span class="capsule-qty text-[10px] font-bold" style="color: ${pct ? '#ffffff' : 'rgba(255, 255, 255, 0.3)'};">${isActive ? 'ACTIVE' : 'INACTIVE'}</span>
+                                    </div>
                                 `;
                             }).join('')}
                         </div>
@@ -394,17 +402,35 @@ const AdviceEngine = {
         }
 
         container.innerHTML = `
-            <div class="advice-card card-${advice.type} w-full max-w-lg mx-auto opacity-0 translate-y-2 animate-fade-in">
-                <div class="advice-header">
-                    <span class="advice-tag tag-${advice.type}">
-                        <span class="material-symbols-outlined text-[12px]" style="font-variation-fill: 1">${advice.icon || 'lightbulb'}</span>
-                        ${advice.tag}
-                    </span>
+            <div class="w-full opacity-0 translate-y-2 animate-fade-in flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 py-4 px-2">
+                <!-- Left Column: Text & Badge -->
+                <div class="flex-1 space-y-5 flex flex-col justify-center text-left">
+                    <div>
+                        <span class="advice-tag tag-${advice.type} inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-opacity-10 border">
+                            <span class="material-symbols-outlined text-[12px]" style="font-variation-fill: 1">${advice.icon || 'lightbulb'}</span>
+                            ${advice.tag}
+                        </span>
+                    </div>
+                    <p class="text-[20px] lg:text-[24px] font-bold text-white leading-snug tracking-tight">${advice.text}</p>
                 </div>
-                <p class="text-sm text-gray-300 leading-relaxed">${advice.text}</p>
-                ${visualHtml}
+                <!-- Right Column: Card Visualizer -->
+                ${visualHtml ? `
+                <div class="flex-grow-0 flex-shrink-0 w-full lg:w-[48%] lg:max-w-[450px]">
+                    ${visualHtml}
+                </div>
+                ` : ''}
             </div>
         `;
+
+        // Trigger capsule width animations on render
+        setTimeout(() => {
+            container.querySelectorAll('.capsule-fill').forEach(bar => {
+                const target = bar.getAttribute('data-pct');
+                if (target !== null) {
+                    bar.style.width = target + '%';
+                }
+            });
+        }, 50);
     }
 };
 

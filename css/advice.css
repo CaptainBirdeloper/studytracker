@@ -8,7 +8,8 @@
     overflow: hidden;
 }
 
-.advice-card::before {
+.advice-card::before,
+.m3-card::before {
     content: '';
     position: absolute;
     top: 0;
@@ -17,18 +18,23 @@
     height: 3px;
     background: transparent;
     transition: background 0.3s ease;
+    z-index: 10;
 }
 
-.advice-card.card-strength::before {
+.advice-card.card-strength::before,
+.m3-card.card-strength::before {
     background: linear-gradient(90deg, var(--accent-lime), transparent);
 }
-.advice-card.card-warning::before {
+.advice-card.card-warning::before,
+.m3-card.card-warning::before {
     background: linear-gradient(90deg, var(--accent-orange), transparent);
 }
-.advice-card.card-danger::before {
+.advice-card.card-danger::before,
+.m3-card.card-danger::before {
     background: linear-gradient(90deg, var(--accent-burnt), transparent);
 }
-.advice-card.card-info::before {
+.advice-card.card-info::before,
+.m3-card.card-info::before {
     background: linear-gradient(90deg, var(--card-sky), transparent);
 }
 
@@ -60,11 +66,18 @@
 .tag-danger { background: rgba(201, 79, 10, 0.1); color: var(--accent-burnt); border: 1px solid rgba(201, 79, 10, 0.2); }
 .tag-info { background: rgba(123, 191, 223, 0.1); color: var(--card-sky); border: 1px solid rgba(123, 191, 223, 0.2); }
 
-/* Micro visual styles */
 .advice-visual {
     margin-top: 1.25rem;
     padding-top: 1rem;
     border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+@media (min-width: 768px) {
+    .advice-visual {
+        margin-top: 0;
+        padding-top: 0;
+        border-top: none;
+    }
 }
 
 .visual-bar-track {
@@ -132,4 +145,60 @@
     justify-content: center !important;
     align-items: center !important;
     width: 100% !important;
+}
+
+/* Material 3 Expressive Capsule Layout (Dark Mode) */
+.advice-gradient-container {
+    background: linear-gradient(135deg, #181528 0%, #0E0D14 100%);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 28px;
+    padding: 1.5rem;
+    width: 100%;
+}
+
+.capsule-row {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 100px;
+    height: 2.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 3px;
+    position: relative;
+    overflow: hidden;
+}
+
+.capsule-fill {
+    height: 100%;
+    border-radius: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+    color: #000000;
+    font-weight: 900;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+    min-width: 2.75rem; /* Accurate length representation while fitting text */
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.capsule-qty {
+    color: #ffffff;
+    font-weight: 900;
+    font-size: 0.75rem;
+    padding-right: 1rem;
+    white-space: nowrap;
+}
+
+/* Override desktop stretch rules from main.css */
+@media (min-width: 1024px) {
+    .advice-section {
+        min-height: auto !important;
+        justify-content: flex-start !important;
+    }
 }
