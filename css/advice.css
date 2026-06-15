@@ -197,7 +197,8 @@
 
 /* Override desktop stretch rules from main.css */
 @media (min-width: 1024px) {
-    .advice-section {
+    .advice-section,
+    .density-section {
         min-height: auto !important;
         justify-content: flex-start !important;
     }
