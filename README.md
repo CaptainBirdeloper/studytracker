@@ -43,7 +43,20 @@ An AI-like engine that analyzes your metrics and provides tactical feedback:
 - ⚡ **Efficiency Bottlenecks**: Highlights where you are slower than the target pace.
 - 🏆 **Core Strengths**: Identifies your "Elite" subjects and suggests tougher material.
 
-### 5. Professional Settings
+### 5. Standalone Focus Timer (Home)
+A beautiful, standalone Material 3 Expressive timer to keep you in the zone.
+- **Visual Progress**: Dynamic SVG progress ring with neon gradient animations.
+- **Quick Controls**: Instant presets (5m, 25m, 45m, 60m), fine-tuning adjusters (+1m/-1m), and custom slider selector.
+- **Expressive Motion**: Interface dynamically collapses secondary controls when active, morphing into a single centered start/stop button to eliminate visual clutter.
+- **Synthetic Alarm**: Offline-friendly alarm double-chime built using the Web Audio API (no external asset dependencies).
+
+### 6. Gemini AI Insights (Performance)
+Personalized study diagnostics powered by Gemini 3.1 Flash-Lite.
+- **Custom Prompts**: Evaluates your chapter mastery, density stats, and subject balance to generate tailored guidance.
+- **Secure Key Storage**: Inputs your own Gemini API key in Settings, saved securely in local storage.
+- **Smart Quotas & Caching**: Employs rolling status hashing to serve cached advice instantly and enforces a strict 3-requests-per-session limit to manage API quota.
+
+### 7. Professional Settings
 - **Data Portability**: Full JSON Export/Import functionality for local backups.
 - **UI Customization**: Deep font-size and family customization (including support for custom system fonts like JetBrains Mono).
 - **Privacy First**: All data is stored locally in your browser (`localStorage`). No servers, no tracking.
