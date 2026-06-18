@@ -116,7 +116,7 @@ const Analytics = {
      * Calculates Question Density (Time per Question)
      * Groups data by Subject and Source.
      */
-    getDensityStats: function() {
+    getDensityStats: function(weekOffset = null) {
         const data = loadData();
         const stats = {
             overall: { time: 0, reps: 0 },
@@ -127,7 +127,22 @@ const Analytics = {
             }
         };
 
-        Object.values(data.history).forEach(day => {
+        // Determine allowed dates if weekOffset is specified
+        let allowedDates = null;
+        if (weekOffset !== null) {
+            allowedDates = [];
+            const end = new Date();
+            end.setDate(end.getDate() - (weekOffset * 7));
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date(end);
+                d.setDate(d.getDate() - i);
+                allowedDates.push(getLocalISODate(d));
+            }
+        }
+
+        Object.entries(data.history).forEach(([dateStr, day]) => {
+            if (allowedDates && !allowedDates.includes(dateStr)) return;
+
             if (day.chapters) {
                 Object.entries(day.chapters).forEach(([chapterName, chData]) => {
                     if (typeof chData !== 'object') return;
@@ -139,20 +154,28 @@ const Analytics = {
                     const subject = id ? id.subject : null;
 
                     if (reps > 0) {
-                        stats.overall.time += time;
-                        stats.overall.reps += reps;
+                        const hasInternal = sources.some(s => s === 'module' || s === 'kota');
+                        
+                        if (hasInternal) {
+                            stats.overall.time += time;
+                            stats.overall.reps += reps;
+                        }
 
                         if (subject && stats.subjects[subject]) {
-                            stats.subjects[subject].time += time;
-                            stats.subjects[subject].reps += reps;
+                            if (hasInternal) {
+                                stats.subjects[subject].time += time;
+                                stats.subjects[subject].reps += reps;
+                            }
 
                             const normalizedChKey = id.chapter.toLowerCase();
                             if (!stats.subjects[subject].chapters[normalizedChKey]) {
                                 stats.subjects[subject].chapters[normalizedChKey] = { time: 0, reps: 0, sources: {} };
                             }
                             const chStats = stats.subjects[subject].chapters[normalizedChKey];
-                            chStats.time += time;
-                            chStats.reps += reps;
+                            if (hasInternal) {
+                                chStats.time += time;
+                                chStats.reps += reps;
+                            }
 
                             sources.forEach(src => {
                                 // Subject-level sources
@@ -204,8 +227,11 @@ const Analytics = {
 
                     if (reps > 0) {
                         if (source === 'total') {
-                            dailyTime += time;
-                            dailyReps += reps;
+                            const hasInternal = sources.some(s => s === 'module' || s === 'kota');
+                            if (hasInternal) {
+                                dailyTime += time;
+                                dailyReps += reps;
+                            }
                         } else if (sources.includes(source)) {
                             dailyTime += time;
                             dailyReps += reps;

@@ -11,6 +11,7 @@
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/timer.css">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
     <title>Study.Log</title>
 </head>
@@ -64,6 +65,69 @@
                 </div>
             </div>
         </div>
+
+        <!-- Standalone Material 3 Expressive Timer -->
+        <div class="timer-card mt-6 w-full max-w-[1600px] mx-auto">
+            <h3 class="text-xs uppercase tracking-widest text-gray-400 font-bold mb-4">Focus Timer</h3>
+            <div class="flex flex-col md:flex-row items-center justify-around gap-8 py-4">
+                <!-- SVG Progress Clock Dial -->
+                <div class="relative w-60 h-60 flex items-center justify-center">
+                    <svg class="timer-svg w-60 h-60 transform -rotate-90" viewBox="0 0 200 200">
+                        <defs>
+                            <linearGradient id="timer-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#AAFF00" />
+                                <stop offset="100%" stop-color="#00E5FF" />
+                            </linearGradient>
+                        </defs>
+                        <circle cx="100" cy="100" r="85" class="timer-track" />
+                        <circle cx="100" cy="100" r="85" class="timer-progress" />
+                    </svg>
+                    <div class="absolute flex flex-col items-center justify-center">
+                        <span id="timer-display" class="font-mono text-4xl lg:text-5xl font-black text-white tracking-tight">25:00</span>
+                        <span id="timer-status" class="text-[9px] uppercase tracking-[0.2em] text-gray-500 font-extrabold mt-1">IDLE</span>
+                    </div>
+                </div>
+
+                <!-- Controls & Adjustments Grid -->
+                <div class="flex flex-col gap-4 w-full max-w-sm">
+                    <div class="flex flex-col gap-2 timer-section-toggle">
+                        <span class="text-[10px] text-gray-500 uppercase tracking-widest font-black">Quick Presets</span>
+                        <div class="grid grid-cols-4 gap-2">
+                            <span class="preset-btn text-center cursor-pointer active-preset" data-time="1500">25m</span>
+                            <span class="preset-btn text-center cursor-pointer" data-time="2700">45m</span>
+                            <span class="preset-btn text-center cursor-pointer" data-time="3600">60m</span>
+                            <span class="preset-btn text-center cursor-pointer" data-time="300">5m</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 timer-section-toggle">
+                        <span class="text-[10px] text-gray-500 uppercase tracking-widest font-black whitespace-nowrap">Adjust</span>
+                        <div class="h-px w-full bg-white/5"></div>
+                        <div class="flex items-center gap-1.5">
+                            <span id="timer-add-min" class="adjust-btn cursor-pointer">+1m</span>
+                            <span id="timer-sub-min" class="adjust-btn cursor-pointer">-1m</span>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-2 mt-2 timer-section-toggle">
+                        <div class="flex justify-between items-center text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+                            <span>Set Custom</span>
+                            <span id="custom-minutes-label">25 mins</span>
+                        </div>
+                        <input id="timer-custom-slider" type="range" min="1" max="180" value="25" class="w-full h-8 bg-transparent appearance-none cursor-pointer accent-[#AAFF00]"/>
+                    </div>
+                    <div class="timer-controls-row flex items-center justify-center gap-4 mt-4">
+                        <span id="timer-reset" class="control-btn-sec flex items-center justify-center w-12 h-12 rounded-full border border-white/10 text-white hover:bg-white/5 hover:border-white/25 active:scale-95 transition-all cursor-pointer">
+                            <span class="material-symbols-outlined select-none">restart_alt</span>
+                        </span>
+                        <span id="timer-toggle" class="control-btn-pri flex items-center justify-center w-16 h-16 rounded-full bg-[#AAFF00] text-black shadow-lg shadow-[#AAFF00]/10 hover:scale-105 active:scale-95 transition-all cursor-pointer">
+                            <span class="material-symbols-outlined text-3xl font-bold select-none">play_arrow</span>
+                        </span>
+                        <span id="timer-sound-toggle" class="control-btn-sec flex items-center justify-center w-12 h-12 rounded-full border border-white/10 text-white hover:bg-white/5 hover:border-white/25 active:scale-95 transition-all cursor-pointer">
+                            <span class="material-symbols-outlined select-none">volume_up</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
  
     <!-- Bottom Navigation -->
@@ -97,6 +161,7 @@
     <script src="js/storage.js"></script>
     <script src="js/jee_data.js"></script>
     <script src="js/chapter_validator.js"></script>
+    <script src="js/timer.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>

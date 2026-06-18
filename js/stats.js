@@ -81,6 +81,21 @@ window.StatsController = {
             });
         }
 
+        const scopeWeekBtn = document.getElementById('density-scope-week');
+        const scopeAllBtn = document.getElementById('density-scope-all');
+        if (scopeWeekBtn && scopeAllBtn) {
+            scopeWeekBtn.addEventListener('click', () => {
+                this.densityScope = 'weekly';
+                this.updateDensityScopeUI();
+                this.renderDensity();
+            });
+            scopeAllBtn.addEventListener('click', () => {
+                this.densityScope = 'alltime';
+                this.updateDensityScopeUI();
+                this.renderDensity();
+            });
+        }
+
         AdviceEngine.init();
         this.refreshAll();
     },
@@ -125,7 +140,8 @@ window.StatsController = {
     },
 
     renderDensity: function() {
-        const stats = Analytics.getDensityStats();
+        const weekOffset = this.densityScope === 'weekly' ? this.weekOffset : null;
+        const stats = Analytics.getDensityStats(weekOffset);
         
         // Target Benchmarks based on research
         const targets = {
@@ -432,7 +448,30 @@ window.StatsController = {
         }
     },
 
+    densityScope: 'weekly',
+
+    updateDensityScopeUI: function() {
+        const scopeWeekBtn = document.getElementById('density-scope-week');
+        const scopeAllBtn = document.getElementById('density-scope-all');
+        if (!scopeWeekBtn || !scopeAllBtn) return;
+
+        if (this.weekOffset === 0) {
+            scopeWeekBtn.textContent = 'This Week';
+        } else {
+            scopeWeekBtn.textContent = 'Selected Wk';
+        }
+
+        if (this.densityScope === 'weekly') {
+            scopeWeekBtn.className = 'rounded-full px-3 py-1 text-[9px] uppercase tracking-widest font-black transition-all cursor-pointer bg-[#AAFF00] text-black shadow-md shadow-[#AAFF00]/10';
+            scopeAllBtn.className = 'rounded-full px-3 py-1 text-[9px] uppercase tracking-widest font-black transition-all cursor-pointer bg-transparent text-gray-400 hover:text-white';
+        } else {
+            scopeWeekBtn.className = 'rounded-full px-3 py-1 text-[9px] uppercase tracking-widest font-black transition-all cursor-pointer bg-transparent text-gray-400 hover:text-white';
+            scopeAllBtn.className = 'rounded-full px-3 py-1 text-[9px] uppercase tracking-widest font-black transition-all cursor-pointer bg-[#AAFF00] text-black shadow-md shadow-[#AAFF00]/10';
+        }
+    },
+
     refreshAll: function() {
+        this.updateDensityScopeUI();
         this.updateHero();
         const weekly = Analytics.getWeeklySummary(this.weekOffset, this.subjectFilter);
         

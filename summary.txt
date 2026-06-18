@@ -1,11 +1,11 @@
-# STUDY.LOG - Technical Summary (Updated 2026-06-15)
+# STUDY.LOG - Technical Summary (Updated 2026-06-18)
 
 ## Core Concept
-High-performance, AMOLED-black PWA for JEE aspirants. Tracks **Quantity** (Questions) and **Density** (Time per Question) with data-driven tactical advice.
+High-performance, AMOLED-black PWA for JEE aspirants. Tracks **Quantity** (Questions) and **Density** (Time per Question) with data-driven tactical advice and personalized Gemini AI insights.
 
 ## Current Architecture
 - **Directory Structure**: Organized into `/js` and `/css` for professional cleanliness and Vercel scalability.
-- **State Management**: Manual logging of Questions, Duration (mins), Chapter, and Source Material. Lingering zeros in input fields are automatically cleared on focus and restored on empty blur.
+- **State Management**: Manual logging of Questions, Duration (mins), Chapter, and Source Material. Lingering zeros in input fields are automatically cleared on focus and restored on empty blur. Gemini API key is securely saved in `localStorage` under `gemini_api_key` and used with Gemini 3.1 Flash-Lite to populate the AI Insights section with a 3-request-per-session limit.
 - **UI**: AMOLED-optimized (#000000). Tailwind JIT via CDN. Borderless high-density Bento grid design maximizing space. Bottom navigation behaves as responsive sidebar on desktop viewports. Settings panel contains flat list rows.
 - **Storage**: Persistent `localStorage` under `study_log_data`.
 - **Modularity**: ESM-style individual script loading. No bundler/node dependencies.
@@ -13,7 +13,7 @@ High-performance, AMOLED-black PWA for JEE aspirants. Tracks **Quantity** (Quest
 
 ## Quick FAQ: Where to Edit?
 - **Folder Structure?** Root contains HTML/PWA files. logic in `/js`, styles in `/css`.
-- **Modify Study Advice logic?** `js/advice.js` (supports touch swipe gestures and AMOLED HTML micro-visualizers).
+- **Modify Study Advice / Gemini AI logic?** `js/advice.js` for local advice, `js/ai_advice.js` for Gemini 3.1 Flash-Lite insights (caches cards, enforces 3-request-per-session quota limit).
 - **Update Question Density benchmarks?** `js/stats.js` (inside `renderDensity`, parses range limits for Speedy, On Track, and Slow dynamic status badges).
 - **Adjust Weighted Practice bias?** `js/practice.js` (uses `JEE_WEIGHTAGE` from `jee_data.js`, includes interactive checklists, progress calculations, and sessionStorage session save/restore).
 - **Change Settings/Export logic?** `js/settings.js`.
@@ -23,13 +23,15 @@ High-performance, AMOLED-black PWA for JEE aspirants. Tracks **Quantity** (Quest
 1. `js/storage.js`: CRUD, global `applySettings`, and `escapeHTML` helper.
 2. `js/jee_data.js`: Weightage constants for 70+ chapters.
 3. `js/chapter_validator.js`: Fuzzy matching engine (70% match threshold) and `escapeHTML` fallback.
-4. `js/analytics.js`: Aggregation for trends, distribution, and density.
-5. `js/graphs.js`: Weekly bar graph rendering.
-6. `js/history.js`: Optimized history list (Initial limit 4, lazy expand, visual fade, long press hold-to-delete, and XSS escaping).
-7. `js/distribution.js`: Subject/Chapter mastery tracking (with XSS escaping).
-8. `js/advice.js`: Dynamic advice carousel (Consistency/Volume/Density logic).
-9. `js/stats.js`: Main orchestration for the Performance panel.
-10. `js/practice.js`: Weighted vs. Random question generator (interactive checklists, progress tracking, and session state persistence).
+4. `js/timer.js`: Standalone Focus Timer module logic (SVG progress, presets, synth audio chime).
+5. `js/analytics.js`: Aggregation for trends, distribution, and density.
+6. `js/graphs.js`: Weekly bar graph rendering.
+7. `js/history.js`: Optimized history list (Initial limit 4, lazy expand, visual fade, long press hold-to-delete, and XSS escaping).
+8. `js/distribution.js`: Subject/Chapter mastery tracking (with XSS escaping).
+9. `js/advice.js`: Dynamic advice carousel (Consistency/Volume/Density logic).
+10. `js/ai_advice.js`: Gemini 3.1 Flash-Lite insights carousel (caching, quota tracking, standard card layout rendering).
+11. `js/stats.js`: Main orchestration for the Performance panel.
+12. `js/practice.js`: Weighted vs. Random question generator (interactive checklists, progress tracking, and session state persistence).
 
 ## Data Schema
 ```json
@@ -58,8 +60,9 @@ High-performance, AMOLED-black PWA for JEE aspirants. Tracks **Quantity** (Quest
 ## Developer Notes
 - **Paths**: ALWAYS use `/js/file.js` and `/css/file.css` in HTML imports.
 - **Time**: Inputs: Minutes. Storage: Seconds. Analytics: Minutes (1 decimal).
-- **Service Worker**: Currently `v18` (cache version `studylog-v18`). Updates require cache busting.
+- **Service Worker**: Currently `v34` (cache version `studylog-v34`). Updates require cache busting. Pre-caches timer, advice, and AI advice assets.
 - **PWA Integrity**: Keep `manifest.json`, `sw.js`, and `icon.jpeg` in the root for Vercel discovery. PWA app icons and favicons map to local `icon.jpeg`.
 - **Benchmarks**: Target density varies by source (e.g., Pathfinder: 15m/q, Module: 2m/q). Density stats show dynamic status badges (Speedy, On Track, Slow) relative to target.
 - **Validation**: `js/app.js` blocks submissions with 0 quantity or 0 duration, and clears zero inputs on focus.
+- **Focus Timer**: `js/timer.js` runs a standalone Material 3 Focus Timer with custom progress ring, quick presets, slider, micro-adjustments, and synth alarm chime.
 - **Import Blueprint**: See `import.txt` for manual JSON editing guide.

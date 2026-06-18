@@ -1,0 +1,218 @@
+/* css/timer.css */
+.timer-card {
+    background: linear-gradient(135deg, #120e25 0%, #08070d 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 28px;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.timer-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #AAFF00, #00E5FF, transparent);
+    z-index: 10;
+}
+
+/* Custom styling for the range slider track and thumb */
+#timer-custom-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent !important;
+    height: 32px;
+    width: 100%;
+}
+
+#timer-custom-slider::-webkit-slider-runnable-track {
+    background: rgba(255, 255, 255, 0.05);
+    height: 6px;
+    border-radius: 99px;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+#timer-custom-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #AAFF00;
+    box-shadow: 0 0 10px rgba(170, 255, 0, 0.4);
+    cursor: pointer;
+    margin-top: -5px;
+    transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#timer-custom-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.25);
+    box-shadow: 0 0 14px rgba(170, 255, 0, 0.6);
+}
+
+/* Firefox Support */
+#timer-custom-slider::-moz-range-track {
+    background: rgba(255, 255, 255, 0.05);
+    height: 6px;
+    border-radius: 99px;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+#timer-custom-slider::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #AAFF00;
+    border: none;
+    box-shadow: 0 0 10px rgba(170, 255, 0, 0.4);
+    cursor: pointer;
+    transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#timer-custom-slider::-moz-range-thumb:hover {
+    transform: scale(1.25);
+    box-shadow: 0 0 14px rgba(170, 255, 0, 0.6);
+}
+
+/* Presets button styles */
+.preset-btn {
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    color: rgba(255, 255, 255, 0.7) !important;
+    border-radius: 12px;
+    padding: 8px 16px;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    text-transform: uppercase;
+}
+
+.preset-btn:active {
+    transform: scale(0.95);
+}
+
+.preset-btn:hover {
+    background: rgba(255, 255, 255, 0.07) !important;
+    border-color: rgba(255, 255, 255, 0.15) !important;
+    color: #ffffff !important;
+}
+
+.preset-btn.active-preset {
+    background: rgba(170, 255, 0, 0.1) !important;
+    border-color: rgba(170, 255, 0, 0.3) !important;
+    color: #AAFF00 !important;
+    box-shadow: 0 0 12px rgba(170, 255, 0, 0.05);
+}
+
+/* Adjust minute buttons */
+.adjust-btn {
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    color: rgba(255, 255, 255, 0.6) !important;
+    border-radius: 8px;
+    padding: 4px 10px;
+    font-size: 9px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.adjust-btn:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: #ffffff !important;
+}
+
+.control-btn-pri {
+    background-color: #AAFF00 !important;
+    color: #000000 !important;
+}
+
+.control-btn-pri:hover {
+    background-color: #bfff40 !important;
+}
+
+/* SVG ring progress animation setup */
+.timer-track {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.04);
+    stroke-width: 8px;
+}
+
+.timer-progress {
+    fill: none;
+    stroke: url(#timer-grad);
+    stroke-width: 8px;
+    stroke-linecap: round;
+    stroke-dasharray: 534; /* 2 * PI * r (r=85) = 534.07 */
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 0.1s linear;
+}
+
+/* Pulse animation for running state */
+@keyframes timerPulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.02); opacity: 0.97; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.timer-running-pulse {
+    animation: timerPulse 2s infinite ease-in-out;
+}
+
+/* Expressive transition configurations for timer running state */
+.timer-section-toggle {
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                margin 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                padding 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                visibility 0.4s;
+    max-height: 150px;
+    opacity: 1;
+    visibility: visible;
+    overflow: hidden;
+}
+
+.timer-running .timer-section-toggle {
+    max-height: 0;
+    opacity: 0;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+#timer-reset, #timer-sound-toggle {
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                margin 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                border-width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                visibility 0.4s;
+}
+
+.timer-running #timer-reset,
+.timer-running #timer-sound-toggle {
+    opacity: 0;
+    width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding: 0 !important;
+    border-width: 0 !important;
+    visibility: hidden;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.timer-controls-row {
+    transition: gap 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.timer-running .timer-controls-row {
+    gap: 0 !important;
+}

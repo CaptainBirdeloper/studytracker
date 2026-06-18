@@ -146,6 +146,14 @@ function updateStats(reps, timeSeconds, chapter, source = 'module') {
     }
 
     saveData(data);
+    
+    // Reset Gemini session request limit and invalidate cache
+    if (typeof sessionStorage !== 'undefined') {
+        sessionStorage.removeItem('gemini_session_requests');
+    }
+    if (typeof localStorage !== 'undefined') {
+        localStorage.removeItem('gemini_ai_advice_hash');
+    }
 }
 
 if (typeof window !== 'undefined') {
@@ -179,6 +187,15 @@ if (typeof window !== 'undefined') {
         data.totalTime = Math.max(0, data.totalTime - totalDeletedTime);
         
         saveData(data);
+
+        // Reset Gemini session request limit and invalidate cache
+        if (typeof sessionStorage !== 'undefined') {
+            sessionStorage.removeItem('gemini_session_requests');
+        }
+        if (typeof localStorage !== 'undefined') {
+            localStorage.removeItem('gemini_ai_advice_hash');
+        }
+
         if (callback) callback();
     };
 }

@@ -52,6 +52,22 @@
                 </div>
                 <span class="material-symbols-outlined text-red-500">delete</span>
             </div>
+            
+            <!-- Gemini API Key Configuration -->
+            <div class="col-span-full pt-4 space-y-4">
+                <h3 class="text-xs uppercase tracking-widest text-gray-400">Gemini AI Settings</h3>
+                <div class="bg-[#0A0A0A] border border-gray-800 rounded-xl p-6 space-y-4">
+                    <div class="flex flex-col gap-2">
+                        <label class="text-[10px] uppercase tracking-[0.2em] text-gray-500 font-bold">API Key</label>
+                        <input id="gemini-key-input" type="password" placeholder="Enter Gemini API Key (AI-xxxx)" class="w-full bg-black border border-gray-800 rounded-lg p-3 text-sm font-bold outline-none focus:border-white transition-colors" />
+                        <div class="flex justify-between items-center mt-1">
+                            <span class="text-[8px] text-gray-500 uppercase tracking-wider font-bold">Stored locally in your browser</span>
+                            <span id="save-key-feedback" class="text-[8px] text-emerald-500 uppercase tracking-wider font-extrabold hidden">Saved!</span>
+                        </div>
+                    </div>
+                    <button id="save-key-btn" class="w-full bg-white text-black py-3 rounded-lg font-black uppercase tracking-widest text-xs transition-all hover:bg-gray-200 active:scale-95 cursor-pointer">Save API Key</button>
+                </div>
+            </div>
         </div>
 
         <!-- Appearance Section -->

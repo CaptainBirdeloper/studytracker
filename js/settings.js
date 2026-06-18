@@ -31,6 +31,14 @@ const SettingsController = {
             this.customFontContainer.classList.remove('hidden');
         }
 
+        this.geminiKeyInput = document.getElementById('gemini-key-input');
+        this.saveKeyBtn = document.getElementById('save-key-btn');
+        this.saveKeyFeedback = document.getElementById('save-key-feedback');
+
+        if (this.geminiKeyInput) {
+            this.geminiKeyInput.value = localStorage.getItem('gemini_api_key') || '';
+        }
+
         this.bindEvents();
     },
 
@@ -62,6 +70,21 @@ const SettingsController = {
         this.customFontInput.addEventListener('input', () => {
             this.updateSettings();
         });
+
+        if (this.saveKeyBtn && this.geminiKeyInput) {
+            this.saveKeyBtn.addEventListener('click', () => {
+                const key = this.geminiKeyInput.value.trim();
+                localStorage.setItem('gemini_api_key', key);
+                localStorage.removeItem('gemini_ai_advice_hash'); // invalidate cache
+                
+                if (this.saveKeyFeedback) {
+                    this.saveKeyFeedback.classList.remove('hidden');
+                    setTimeout(() => {
+                        this.saveKeyFeedback.classList.add('hidden');
+                    }, 2000);
+                }
+            });
+        }
     },
 
     updateSettings: function() {

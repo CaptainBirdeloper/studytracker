@@ -12,17 +12,13 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/advice.css">
+    <link rel="stylesheet" href="css/ai_advice.css">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
     <title>Study.Log - Performance</title>
 </head>
 <body class="spacer-pb">
     <header class="w-full px-4 pt-4 flex justify-between items-center">
         <h1 class="text-xl font-bold uppercase tracking-[0.2em] text-white">Performance</h1>
-        <div class="flex items-center bg-transparent border border-white/10 rounded-full px-3 py-1">
-            <button id="week-prev" class="text-[10px] font-black text-gray-400 hover:text-white px-2 cursor-pointer">←</button>
-            <span id="week-label" class="text-[9px] text-gray-300 uppercase tracking-widest font-bold">This Week</span>
-            <button id="week-next" class="text-[10px] font-black text-gray-400 hover:text-white px-2 cursor-pointer" disabled>→</button>
-        </div>
     </header>
 
     <main class="px-4 pt-4 w-full">
@@ -98,11 +94,19 @@
  
             <!-- Question Density Section -->
             <section class="m3-card lg:col-span-3 flex flex-col gap-6 density-section">
-                <div class="flex items-center justify-between border-b border-white/5 pb-3">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/5 pb-3 gap-2">
                     <h3 class="text-xs uppercase tracking-widest text-gray-400 font-bold">Question Density (Time / Q)</h3>
-                    <div class="flex items-center gap-2">
-                        <span class="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Overall:</span>
-                        <span id="overall-density" class="text-lg font-black text-white">0.0m</span>
+                    <div class="flex flex-wrap items-center gap-4">
+                        <!-- Toggle buttons for Selected Week vs All Time -->
+                        <div class="flex items-center bg-black/40 border border-white/5 rounded-full p-0.5">
+                            <span id="density-scope-week" class="rounded-full px-3 py-1 text-[9px] uppercase tracking-widest font-black transition-all cursor-pointer bg-[#AAFF00] text-black shadow-md shadow-[#AAFF00]/10">This Week</span>
+                            <span id="density-scope-all" class="rounded-full px-3 py-1 text-[9px] uppercase tracking-widest font-black transition-all cursor-pointer bg-transparent text-gray-400 hover:text-white">All Time</span>
+                        </div>
+                        <div class="h-4 w-px bg-white/5"></div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Overall:</span>
+                            <span id="overall-density" class="text-lg font-black text-white">0.0m</span>
+                        </div>
                     </div>
                 </div>
                 
@@ -238,6 +242,28 @@
                 </div>
                 <div id="advice-container" class="min-h-[140px] flex items-center justify-center"></div>
             </section>
+
+            <!-- Gemini AI Insights Section -->
+            <section class="m3-card lg:col-span-3 flex flex-col gap-4 advice-section">
+                <div class="flex items-center justify-between border-b border-white/5 pb-2">
+                    <h3 class="text-xs uppercase tracking-widest text-gray-400 font-bold">Gemini AI Insights</h3>
+                    <div class="flex items-center gap-4">
+                        <div id="ai-advice-nav" class="flex items-center gap-4 hidden">
+                            <button id="ai-advice-prev" class="text-gray-500 hover:text-white transition-colors disabled:opacity-20 cursor-pointer">
+                                <span class="material-symbols-outlined">chevron_left</span>
+                            </button>
+                            <span id="ai-advice-page" class="text-[10px] text-gray-500 uppercase font-black tracking-widest">1 / 3</span>
+                            <button id="ai-advice-next" class="text-gray-500 hover:text-white transition-colors disabled:opacity-20 cursor-pointer">
+                                <span class="material-symbols-outlined">chevron_right</span>
+                            </button>
+                        </div>
+                        <span class="text-[8px] font-black tracking-widest uppercase px-1.5 py-0.5 rounded bg-blue-950/40 text-blue-400 border border-blue-800/30">Gemini 3.1 Flash-Lite</span>
+                    </div>
+                </div>
+                <div id="ai-advice-container" class="min-h-[140px] flex items-center justify-center">
+                    <p class="text-gray-500 text-sm">Add API key in settings</p>
+                </div>
+            </section>
         </div>
     </main>
  
@@ -311,7 +337,14 @@
     <script src="js/history.js"></script>
     <script src="js/distribution.js"></script>
     <script src="js/advice.js"></script>
+    <script src="js/ai_advice.js"></script>
     <script src="js/stats.js"></script>
     <script src="js/chart_check.js"></script>
+    <!-- Floating Week Selector -->
+    <div class="fixed bottom-24 lg:bottom-6 right-4 lg:right-6 z-50 flex items-center justify-between bg-[#0A0A0A]/90 hover:bg-[#141414] border border-[#AAFF00]/30 rounded-full px-3 py-1.5 min-w-[150px] shadow-2xl shadow-[#AAFF00]/10 backdrop-blur-md transition-all active:scale-95">
+        <button id="week-prev" class="text-base font-black text-gray-400 hover:text-[#AAFF00] disabled:opacity-20 disabled:pointer-events-none px-2.5 py-1 cursor-pointer transition-colors">←</button>
+        <span id="week-label" class="text-[10px] text-white uppercase tracking-widest font-black">This Week</span>
+        <button id="week-next" class="text-base font-black text-gray-400 hover:text-[#AAFF00] disabled:opacity-20 disabled:pointer-events-none px-2.5 py-1 cursor-pointer transition-colors" disabled>→</button>
+    </div>
 </body>
 </html>

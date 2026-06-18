@@ -1,4 +1,4 @@
-const CACHE_NAME = 'studylog-v23';
+const CACHE_NAME = 'studylog-v34';
 const ASSETS = [
   '/',
   '/index.html',
@@ -17,11 +17,15 @@ const ASSETS = [
   '/js/history.js',
   '/js/jee_data.js',
   '/js/advice.js',
+  '/js/ai_advice.js',
   '/js/chart_check.js',
+  '/js/timer.js',
   '/css/main.css',
   '/css/practice.css',
   '/css/stats.css',
   '/css/advice.css',
+  '/css/ai_advice.css',
+  '/css/timer.css',
   '/manifest.json',
   '/icon.jpeg'
 ];

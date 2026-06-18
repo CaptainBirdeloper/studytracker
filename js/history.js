@@ -85,6 +85,8 @@ const HistoryEngine = {
             const deleteBtn = item.querySelector('.delete-confirm-btn button');
 
             const handleStart = (e) => {
+                if (e.target.closest('.delete-confirm-btn')) return;
+
                 // Prevent mouse events if touch is active
                 if (e.type === 'mousedown' && 'ontouchstart' in window) return;
 
