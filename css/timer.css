@@ -1,22 +1,24 @@
 /* css/timer.css */
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&display=swap');
+
 .timer-card {
-    background: linear-gradient(135deg, #120e25 0%, #08070d 100%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: #0A0A0A !important;
+    border: none;
     border-radius: 28px;
     padding: 2rem;
     position: relative;
     overflow: hidden;
 }
 
-.timer-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #AAFF00, #00E5FF, transparent);
-    z-index: 10;
+/* Force Oswald font for all elements inside the timer card */
+.timer-card,
+.timer-card h3,
+.timer-card span:not(.material-symbols-outlined),
+.timer-card div,
+.timer-card button,
+.timer-card input {
+    font-family: 'Oswald', sans-serif !important;
+    letter-spacing: 0.02em;
 }
 
 /* Custom styling for the range slider track and thumb */
@@ -24,69 +26,62 @@
     -webkit-appearance: none;
     appearance: none;
     background: transparent !important;
-    height: 32px;
+    height: 24px;
     width: 100%;
 }
 
 #timer-custom-slider::-webkit-slider-runnable-track {
-    background: rgba(255, 255, 255, 0.05);
+    background: #222222;
     height: 6px;
     border-radius: 99px;
-    border: 1px solid rgba(255, 255, 255, 0.03);
 }
 
 #timer-custom-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: #AAFF00;
-    box-shadow: 0 0 10px rgba(170, 255, 0, 0.4);
+    width: 10px;
+    height: 20px;
+    border-radius: 2px;
+    background: #BFFF00;
     cursor: pointer;
-    margin-top: -5px;
-    transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-top: -7px;
+    transition: transform 0.15s ease;
 }
 
 #timer-custom-slider::-webkit-slider-thumb:hover {
-    transform: scale(1.25);
-    box-shadow: 0 0 14px rgba(170, 255, 0, 0.6);
+    transform: scale(1.2);
 }
 
 /* Firefox Support */
 #timer-custom-slider::-moz-range-track {
-    background: rgba(255, 255, 255, 0.05);
+    background: #222222;
     height: 6px;
     border-radius: 99px;
-    border: 1px solid rgba(255, 255, 255, 0.03);
 }
 
 #timer-custom-slider::-moz-range-thumb {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: #AAFF00;
+    width: 10px;
+    height: 20px;
+    border-radius: 2px;
+    background: #BFFF00;
     border: none;
-    box-shadow: 0 0 10px rgba(170, 255, 0, 0.4);
     cursor: pointer;
-    transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.15s ease;
 }
 
 #timer-custom-slider::-moz-range-thumb:hover {
-    transform: scale(1.25);
-    box-shadow: 0 0 14px rgba(170, 255, 0, 0.6);
+    transform: scale(1.2);
 }
 
 /* Presets button styles */
 .preset-btn {
-    background: rgba(255, 255, 255, 0.03) !important;
-    border: 1px solid rgba(255, 255, 255, 0.05) !important;
-    color: rgba(255, 255, 255, 0.7) !important;
-    border-radius: 12px;
-    padding: 8px 16px;
-    font-size: 9px;
-    font-weight: 800;
-    letter-spacing: 0.05em;
+    background: transparent !important;
+    border: 2px solid #FFFFFF !important;
+    color: #FFFFFF !important;
+    border-radius: 8px;
+    padding: 10px 0px;
+    font-size: 16px;
+    font-weight: 700;
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     text-transform: uppercase;
@@ -97,58 +92,114 @@
 }
 
 .preset-btn:hover {
-    background: rgba(255, 255, 255, 0.07) !important;
-    border-color: rgba(255, 255, 255, 0.15) !important;
-    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-color: #ffffff !important;
 }
 
 .preset-btn.active-preset {
-    background: rgba(170, 255, 0, 0.1) !important;
-    border-color: rgba(170, 255, 0, 0.3) !important;
-    color: #AAFF00 !important;
-    box-shadow: 0 0 12px rgba(170, 255, 0, 0.05);
+    background: #BFFF00 !important;
+    border-color: #BFFF00 !important;
+    color: #000000 !important;
+    outline: 2px solid #BFFF00 !important;
+    outline-offset: 2px;
+}
+
+.preset-btn.active-preset:hover {
+    background: #cbfb26 !important;
+    border-color: #cbfb26 !important;
+    outline-color: #cbfb26 !important;
 }
 
 /* Adjust minute buttons */
 .adjust-btn {
-    background: rgba(255, 255, 255, 0.03) !important;
-    border: 1px solid rgba(255, 255, 255, 0.05) !important;
-    color: rgba(255, 255, 255, 0.6) !important;
+    background: transparent !important;
+    border: 2px solid #FFFFFF !important;
+    color: #FFFFFF !important;
     border-radius: 8px;
-    padding: 4px 10px;
-    font-size: 9px;
-    font-weight: 800;
+    padding: 10px 0px;
+    font-size: 16px;
+    font-weight: 700;
     cursor: pointer;
     transition: all 0.2s ease;
 }
 
 .adjust-btn:hover {
     background: rgba(255, 255, 255, 0.08) !important;
-    color: #ffffff !important;
+}
+
+/* Bottom Row Control Buttons */
+.control-btn-sec {
+    width: 48px;
+    height: 48px;
+    border-radius: 50% !important;
+    border: 2px solid #FFFFFF !important;
+    background: transparent !important;
+    color: #FFFFFF !important;
+    transition: all 0.2s ease;
+}
+
+.control-btn-sec:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Play button wrapper and layers */
+.play-btn-wrapper {
+    position: relative;
+    width: 64px;
+    height: 64px;
 }
 
 .control-btn-pri {
-    background-color: #AAFF00 !important;
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 64px;
+    height: 64px;
+    background-color: #BFFF00 !important;
     color: #000000 !important;
+    border-radius: 12px !important;
+    z-index: 2;
+    transition: transform 0.1s ease, background-color 0.3s ease;
 }
 
 .control-btn-pri:hover {
-    background-color: #bfff40 !important;
+    background-color: #cbfb26 !important;
+}
+
+.control-btn-pri:active {
+    transform: translate(2px, 2px);
+}
+
+.play-btn-shadow {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 64px;
+    height: 64px;
+    background-color: #00E5FF;
+    border-radius: 12px;
+    z-index: 1;
+    transition: background-color 0.3s ease;
+}
+
+/* When running, shadow becomes lime green */
+.timer-running .play-btn-shadow {
+    background-color: #BFFF00 !important;
 }
 
 /* SVG ring progress animation setup */
 .timer-track {
     fill: none;
-    stroke: rgba(255, 255, 255, 0.04);
-    stroke-width: 8px;
+    stroke: rgba(255, 255, 255, 0.015);
+    stroke-width: 16px;
 }
 
 .timer-progress {
     fill: none;
     stroke: url(#timer-grad);
-    stroke-width: 8px;
+    stroke-width: 16px;
     stroke-linecap: round;
-    stroke-dasharray: 534; /* 2 * PI * r (r=85) = 534.07 */
+    stroke-dasharray: 502.65; /* 2 * PI * r (r=80) = 502.65 */
     stroke-dashoffset: 0;
     transition: stroke-dashoffset 0.1s linear;
 }

@@ -254,7 +254,7 @@ const M3Timer = {
         const progressRing = document.querySelector('.timer-progress');
         if (!progressRing) return;
 
-        const circumference = 534; // 2 * PI * 85
+        const circumference = 502.65; // 2 * PI * 80
         const pct = this.totalSeconds > 0 ? (this.secondsRemaining / this.totalSeconds) : 0;
         const offset = circumference * (1 - pct);
         progressRing.style.strokeDashoffset = offset;
