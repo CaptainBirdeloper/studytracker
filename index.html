@@ -73,22 +73,12 @@
                 <!-- SVG Progress Clock Dial -->
                 <div class="relative w-64 h-64 flex items-center justify-center">
                     <svg class="timer-svg w-64 h-64 transform -rotate-90" viewBox="0 0 200 200">
-                        <defs>
-                            <linearGradient id="timer-grad" x1="0%" y1="100%" x2="100%" y2="0%">
-                                <stop offset="0%" stop-color="#AAFF00" />
-                                <stop offset="100%" stop-color="#00E5FF" />
-                            </linearGradient>
-                            <filter id="brush-effect" x="-10%" y="-10%" width="120%" height="120%">
-                                <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" result="noise"/>
-                                <feDisplacementMap in="SourceGraphic" in2="noise" scale="5" xChannelSelector="R" yChannelSelector="G"/>
-                            </filter>
-                        </defs>
                         <circle cx="100" cy="100" r="80" class="timer-track" />
-                        <circle cx="100" cy="100" r="80" class="timer-progress" filter="url(#brush-effect)" />
+                        <circle cx="100" cy="100" r="80" class="timer-progress" />
                     </svg>
-                    <div class="absolute flex flex-col items-center justify-center">
-                        <span id="timer-display" class="font-mono text-5xl font-black text-white tracking-tight">25:00</span>
-                        <span id="timer-status" class="text-[10px] uppercase tracking-[0.2em] text-gray-500 font-extrabold mt-1">IDLE</span>
+                    <div class="absolute flex flex-col items-center justify-center mt-2">
+                        <span id="timer-display" class="text-[72px] leading-none font-black text-white tracking-tight">25:00</span>
+                        <span id="timer-status" class="text-xs uppercase tracking-[0.1em] text-[#AAFF00] font-bold mt-2">IDLE</span>
                     </div>
                 </div>
 
@@ -96,7 +86,7 @@
                 <div class="flex flex-col gap-5 w-full max-w-sm">
                     <div class="flex flex-col gap-2 timer-section-toggle">
                         <span class="text-[10px] text-gray-500 uppercase tracking-widest font-black">Quick Presets</span>
-                        <div class="grid grid-cols-4 gap-2">
+                        <div class="grid grid-cols-2 gap-3">
                             <span class="preset-btn text-center cursor-pointer active-preset" data-time="1500">25M</span>
                             <span class="preset-btn text-center cursor-pointer" data-time="2700">45M</span>
                             <span class="preset-btn text-center cursor-pointer" data-time="3600">60M</span>
@@ -107,33 +97,30 @@
                     <div class="grid grid-cols-2 gap-4 timer-section-toggle">
                         <div class="flex flex-col gap-2">
                             <span class="text-[10px] text-gray-500 uppercase tracking-widest font-black">Adjust</span>
-                            <div class="flex items-center gap-2">
+                            <div class="flex items-center gap-3">
                                 <span id="timer-add-min" class="adjust-btn text-center flex-1 cursor-pointer">+1m</span>
                                 <span id="timer-sub-min" class="adjust-btn text-center flex-1 cursor-pointer">-1m</span>
                             </div>
                         </div>
                         <div class="flex flex-col gap-2">
                             <span class="text-[10px] text-gray-500 uppercase tracking-widest font-black">Set Custom</span>
-                            <div class="flex flex-col justify-between h-full gap-1">
-                                <span id="custom-minutes-label" class="text-lg text-white font-bold leading-none uppercase">25 mins</span>
-                                <input id="timer-custom-slider" type="range" min="1" max="180" value="25" class="w-full h-4 bg-transparent appearance-none cursor-pointer"/>
+                            <div class="flex flex-col justify-between h-full gap-2 mt-1">
+                                <span id="custom-minutes-label" class="text-3xl text-white font-bold leading-none uppercase">25 MINS</span>
+                                <input id="timer-custom-slider" type="range" min="1" max="180" value="25" class="w-full h-4 bg-transparent appearance-none cursor-pointer mt-1"/>
                             </div>
                         </div>
                     </div>
 
-                    <div class="timer-controls-row flex items-center justify-center gap-6 mt-4">
-                        <span id="timer-reset" class="control-btn-sec flex items-center justify-center w-12 h-12 rounded-full border border-white text-white hover:bg-white/5 hover:border-white active:scale-95 transition-all cursor-pointer">
+                    <div class="timer-controls-row flex items-center justify-start gap-4 mt-4">
+                        <span id="timer-reset" class="control-btn-sec flex items-center justify-center w-12 h-12 cursor-pointer">
                             <span class="material-symbols-outlined select-none">restart_alt</span>
                         </span>
                         
-                        <div class="play-btn-wrapper relative w-16 h-16">
-                            <span id="timer-toggle" class="control-btn-pri flex items-center justify-center w-16 h-16 rounded-xl cursor-pointer">
-                                <span class="material-symbols-outlined text-3xl font-bold select-none">play_arrow</span>
-                            </span>
-                            <div class="play-btn-shadow w-16 h-16 rounded-xl"></div>
-                        </div>
+                        <span id="timer-toggle" class="control-btn-pri flex items-center justify-center w-20 h-16 cursor-pointer">
+                            <span class="material-symbols-outlined text-4xl font-bold select-none text-black">play_arrow</span>
+                        </span>
 
-                        <span id="timer-sound-toggle" class="control-btn-sec flex items-center justify-center w-12 h-12 rounded-full border border-white text-white hover:bg-white/5 hover:border-white active:scale-95 transition-all cursor-pointer">
+                        <span id="timer-sound-toggle" class="control-btn-sec flex items-center justify-center w-12 h-12 cursor-pointer">
                             <span class="material-symbols-outlined select-none">volume_up</span>
                         </span>
                     </div>

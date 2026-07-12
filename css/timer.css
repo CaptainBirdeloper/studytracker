@@ -31,56 +31,56 @@
 }
 
 #timer-custom-slider::-webkit-slider-runnable-track {
-    background: #222222;
-    height: 6px;
-    border-radius: 99px;
+    background: #2A2A2A;
+    height: 8px;
+    border-radius: 4px;
 }
 
 #timer-custom-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 10px;
-    height: 20px;
-    border-radius: 2px;
-    background: #BFFF00;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    background: #FF6600;
     cursor: pointer;
-    margin-top: -7px;
+    margin-top: -8px;
     transition: transform 0.15s ease;
 }
 
 #timer-custom-slider::-webkit-slider-thumb:hover {
-    transform: scale(1.2);
+    transform: scale(1.1);
 }
 
 /* Firefox Support */
 #timer-custom-slider::-moz-range-track {
-    background: #222222;
-    height: 6px;
-    border-radius: 99px;
+    background: #2A2A2A;
+    height: 8px;
+    border-radius: 4px;
 }
 
 #timer-custom-slider::-moz-range-thumb {
-    width: 10px;
-    height: 20px;
-    border-radius: 2px;
-    background: #BFFF00;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    background: #FF6600;
     border: none;
     cursor: pointer;
     transition: transform 0.15s ease;
 }
 
 #timer-custom-slider::-moz-range-thumb:hover {
-    transform: scale(1.2);
+    transform: scale(1.1);
 }
 
 /* Presets button styles */
 .preset-btn {
-    background: transparent !important;
-    border: 2px solid #FFFFFF !important;
+    background: #1F1F1F !important;
+    border: none !important;
     color: #FFFFFF !important;
-    border-radius: 8px;
-    padding: 10px 0px;
-    font-size: 16px;
+    border-radius: 12px;
+    padding: 12px 0px;
+    font-size: 20px;
     font-weight: 700;
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -92,39 +92,34 @@
 }
 
 .preset-btn:hover {
-    background: rgba(255, 255, 255, 0.08) !important;
-    border-color: #ffffff !important;
+    background: #2A2A2A !important;
 }
 
 .preset-btn.active-preset {
-    background: #BFFF00 !important;
-    border-color: #BFFF00 !important;
+    background: #AAFF00 !important;
     color: #000000 !important;
-    outline: 2px solid #BFFF00 !important;
-    outline-offset: 2px;
+    outline: none !important;
 }
 
 .preset-btn.active-preset:hover {
-    background: #cbfb26 !important;
-    border-color: #cbfb26 !important;
-    outline-color: #cbfb26 !important;
+    background: #b6ff22 !important;
 }
 
 /* Adjust minute buttons */
 .adjust-btn {
-    background: transparent !important;
-    border: 2px solid #FFFFFF !important;
+    background: #1F1F1F !important;
+    border: 2px solid #AAFF00 !important;
     color: #FFFFFF !important;
-    border-radius: 8px;
+    border-radius: 12px;
     padding: 10px 0px;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 700;
     cursor: pointer;
     transition: all 0.2s ease;
 }
 
 .adjust-btn:hover {
-    background: rgba(255, 255, 255, 0.08) !important;
+    background: #2A2A2A !important;
 }
 
 /* Bottom Row Control Buttons */
@@ -132,72 +127,43 @@
     width: 48px;
     height: 48px;
     border-radius: 50% !important;
-    border: 2px solid #FFFFFF !important;
-    background: transparent !important;
+    border: none !important;
+    background: #1F1F1F !important;
     color: #FFFFFF !important;
     transition: all 0.2s ease;
 }
 
 .control-btn-sec:hover {
-    background: rgba(255, 255, 255, 0.08) !important;
+    background: #2A2A2A !important;
 }
 
 /* Play button wrapper and layers */
-.play-btn-wrapper {
-    position: relative;
-    width: 64px;
-    height: 64px;
-}
-
 .control-btn-pri {
-    position: absolute !important;
-    top: 0;
-    left: 0;
-    width: 64px;
-    height: 64px;
-    background-color: #BFFF00 !important;
+    background-color: #FF6600 !important;
     color: #000000 !important;
-    border-radius: 12px !important;
-    z-index: 2;
+    border-radius: 16px !important;
     transition: transform 0.1s ease, background-color 0.3s ease;
 }
 
 .control-btn-pri:hover {
-    background-color: #cbfb26 !important;
+    background-color: #ff7f2a !important;
 }
 
 .control-btn-pri:active {
-    transform: translate(2px, 2px);
-}
-
-.play-btn-shadow {
-    position: absolute;
-    top: 4px;
-    left: 4px;
-    width: 64px;
-    height: 64px;
-    background-color: #00E5FF;
-    border-radius: 12px;
-    z-index: 1;
-    transition: background-color 0.3s ease;
-}
-
-/* When running, shadow becomes lime green */
-.timer-running .play-btn-shadow {
-    background-color: #BFFF00 !important;
+    transform: scale(0.95);
 }
 
 /* SVG ring progress animation setup */
 .timer-track {
     fill: none;
-    stroke: rgba(255, 255, 255, 0.015);
-    stroke-width: 16px;
+    stroke: #2A2A2A;
+    stroke-width: 18px;
 }
 
 .timer-progress {
     fill: none;
-    stroke: url(#timer-grad);
-    stroke-width: 16px;
+    stroke: #AAFF00;
+    stroke-width: 18px;
     stroke-linecap: round;
     stroke-dasharray: 502.65; /* 2 * PI * r (r=80) = 502.65 */
     stroke-dashoffset: 0;
