@@ -23,29 +23,32 @@
 
     <main class="px-4 pt-4 w-full">
         <div class="m3-grid m3-grid-responsive gap-4">
-            <!-- Hero Card: Total Questions solved (KPI Accent Card Lime) -->
-            <section class="m3-card kpi-accent-card-lime lg:col-span-3 flex flex-col justify-between min-h-[140px]">
-                <span class="card-title">Total Questions</span>
-                <div class="flex-col-center-justify my-2">
-                    <div class="flex items-baseline gap-2">
-                        <span id="reps-val" class="kpi-value">0</span>
-                        <span id="reps-suffix" class="text-xl lg:text-3xl font-bold uppercase"></span>
+            <!-- KPI Hero Cards Container -->
+            <div class="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Hero Card: Total Questions solved (KPI Accent Card Lime) -->
+                <section class="m3-card kpi-accent-card-lime flex flex-col justify-between min-h-[140px]">
+                    <span class="card-title">Total Questions</span>
+                    <div class="flex-col-center-justify my-2">
+                        <div class="flex items-baseline gap-2">
+                            <span id="reps-val" class="kpi-value">0</span>
+                            <span id="reps-suffix" class="text-xl lg:text-3xl font-bold uppercase"></span>
+                        </div>
                     </div>
-                </div>
-                <span class="sublabel lg:text-sm">Lifetime questions recorded</span>
-            </section>
+                    <span class="sublabel lg:text-sm">Lifetime questions recorded</span>
+                </section>
 
-            <!-- Hero Card: Total Time Spent (KPI Accent Card Orange) -->
-            <section class="m3-card kpi-accent-card-orange lg:col-span-3 flex flex-col justify-between min-h-[140px]">
-                <span class="card-title">Total Time Spent</span>
-                <div class="flex-col-center-justify my-2">
-                    <div class="flex items-baseline gap-2">
-                        <span id="time-val" class="kpi-value">0.0</span>
-                        <span id="time-suffix" class="text-xl lg:text-3xl font-bold uppercase">h</span>
+                <!-- Hero Card: Total Time Spent (KPI Accent Card Orange) -->
+                <section class="m3-card kpi-accent-card-orange flex flex-col justify-between min-h-[140px]">
+                    <span class="card-title">Total Time Spent</span>
+                    <div class="flex-col-center-justify my-2">
+                        <div class="flex items-baseline gap-2">
+                            <span id="time-val" class="kpi-value">0.0</span>
+                            <span id="time-suffix" class="text-xl lg:text-3xl font-bold uppercase">h</span>
+                        </div>
                     </div>
-                </div>
-                <span class="sublabel lg:text-sm">Lifetime study hours recorded</span>
-            </section>
+                    <span class="sublabel lg:text-sm">Lifetime study hours recorded</span>
+                </section>
+            </div>
  
             <!-- Chart Card: Weekly Reps (Dark Chart Card) -->
             <section class="m3-card lg:col-span-2 flex flex-col gap-4">
