@@ -102,14 +102,18 @@ window.StatsController = {
 
     updateHero: function() {
         const data = loadData();
-        const target = data.totalReps;
-        const duration = 1200; // 1.2s
-        const start = 0;
-        const startTime = performance.now();
-        const element = document.getElementById('reps-val');
-        const suffixElement = document.getElementById('reps-suffix');
+        const repsTarget = data.totalReps || 0;
+        const timeTarget = parseFloat((data.totalTime / 3600).toFixed(1)) || 0;
         
-        if (!element) return;
+        const duration = 1200; // 1.2s
+        const startTime = performance.now();
+        
+        const repsElement = document.getElementById('reps-val');
+        const repsSuffix = document.getElementById('reps-suffix');
+        const timeElement = document.getElementById('time-val');
+        const timeSuffix = document.getElementById('time-suffix');
+        
+        if (!repsElement && !timeElement) return;
         
         function easeOutExpo(x) {
             return x === 1 ? 1 : 1 - Math.pow(2, -10 * x);
@@ -119,19 +123,37 @@ window.StatsController = {
             const elapsed = now - startTime;
             const progress = Math.min(elapsed / duration, 1);
             const ease = easeOutExpo(progress);
-            const current = Math.floor(start + (target - start) * ease);
             
-            element.textContent = current;
-            if (suffixElement) {
-                suffixElement.textContent = current >= 1000 ? 'K' : '';
+            if (repsElement) {
+                const currentReps = Math.floor(repsTarget * ease);
+                repsElement.textContent = currentReps;
+                if (repsSuffix) {
+                    repsSuffix.textContent = currentReps >= 1000 ? 'K' : '';
+                }
+            }
+            
+            if (timeElement) {
+                const currentTime = (timeTarget * ease).toFixed(1);
+                timeElement.textContent = currentTime;
+                if (timeSuffix) {
+                    timeSuffix.textContent = parseFloat(currentTime) >= 1000 ? 'K' : 'h';
+                }
             }
             
             if (progress < 1) {
                 requestAnimationFrame(animate);
             } else {
-                element.textContent = target;
-                if (suffixElement) {
-                    suffixElement.textContent = target >= 1000 ? 'K' : '';
+                if (repsElement) {
+                    repsElement.textContent = repsTarget;
+                    if (repsSuffix) {
+                        repsSuffix.textContent = repsTarget >= 1000 ? 'K' : '';
+                    }
+                }
+                if (timeElement) {
+                    timeElement.textContent = timeTarget.toFixed(1);
+                    if (timeSuffix) {
+                        timeSuffix.textContent = timeTarget >= 1000 ? 'K' : 'h';
+                    }
                 }
             }
         }
