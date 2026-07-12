@@ -18,11 +18,11 @@ if (typeof window !== 'undefined' && !window.escapeHTML) {
 const ChapterDatabase = {
     "Physics": [
         "Units and Measurements", "Kinematics", "Laws of Motion", "Work Energy and Power", 
-        "Rotational Motion", "Gravitation", "Properties of Solids and Fluids", "Thermal Physics", 
+        "Rotational Motion", "Gravitation", "Properties of Solids", "Properties of Fluids", "Thermal Physics", 
         "Thermodynamics", "Kinetic Theory of Gases", "Oscillations", "Waves", "Electrostatics", 
-        "Current Electricity", "Magnetic Effects of Current and Magnetism", 
-        "Electromagnetic Induction and Alternating Currents", "Electromagnetic Waves", "Optics", 
-        "Dual Nature of Matter and Radiation", "Atoms and Nuclei", "Electronic Devices", "Communication Systems"
+        "Current Electricity", "Magnetic Effects of Current", "Magnetism and Matter", 
+        "Electromagnetic Induction", "Alternating Currents", "Electromagnetic Waves", "Optics", 
+        "Dual Nature of Matter and Radiation", "Atoms", "Nuclei", "Electronic Devices", "Communication Systems"
     ],
     "Chemistry": [
         "Some Basic Concepts of Chemistry", "Structure of Atom", "Classification of Elements and Periodicity in Properties", 
@@ -35,10 +35,10 @@ const ChapterDatabase = {
         "Aldehydes Ketones and Carboxylic Acids", "Amines", "Biomolecules", "Polymers", "Chemistry in Everyday Life"
     ],
     "Mathematics": [
-        "Sets Relations and Functions", "Trigonometric Functions", "Inverse Trigonometric Functions", 
-        "Complex Numbers and Quadratic Equations", "Linear Inequalities", "Permutations and Combinations", 
+        "Sets and Relations", "Functions", "Trigonometric Functions", "Inverse Trigonometric Functions", 
+        "Complex Numbers", "Quadratic Equations", "Linear Inequalities", "Permutations and Combinations", 
         "Binomial Theorem", "Sequences and Series", "Straight Lines", "Conic Sections", 
-        "Introduction to Three-Dimensional Geometry", "Limits and Derivatives", "Mathematical Reasoning", 
+        "Introduction to Three-Dimensional Geometry", "Limits", "Derivatives", "Mathematical Reasoning", 
         "Statistics", "Probability", "Matrices", "Determinants", "Continuity and Differentiability", 
         "Application of Derivatives", "Integrals", "Application of Integrals", "Differential Equations", 
         "Vector Algebra", "Three-Dimensional Geometry", "Linear Programming"
