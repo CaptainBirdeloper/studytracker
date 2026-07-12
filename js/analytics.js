@@ -68,36 +68,43 @@ const Analytics = {
      */
     getWeeklySummary: function(offset = 0, filterSubject = null) {
         const data = loadData();
-        const end = new Date();
-        end.setDate(end.getDate() - (offset * 7));
+        const today = new Date();
+        const day = today.getDay(); // 0 (Sun) to 6 (Sat)
+        const daysToMonday = day === 0 ? 6 : day - 1;
+        
+        const targetMonday = new Date(today);
+        targetMonday.setDate(today.getDate() - daysToMonday - (offset * 7));
         
         const history = [];
-        for (let i = 6; i >= 0; i--) {
-            const d = new Date(end);
-            d.setDate(d.getDate() - i);
+        for (let i = 0; i < 7; i++) {
+            const d = new Date(targetMonday);
+            d.setDate(targetMonday.getDate() + i);
             const dateStr = getLocalISODate(d);
             const dayData = data.history[dateStr] || { reps: 0, time: 0, chapters: {} };
             
+            let reps = 0;
+            let time = 0;
+            
             if (filterSubject) {
-                let filteredReps = 0;
-                let filteredTime = 0;
                 if (dayData.chapters) {
                     Object.entries(dayData.chapters).forEach(([chapterName, chapterStats]) => {
                         const id = ChapterValidator.identify(chapterName);
                         if (id && id.subject === filterSubject) {
                             if (typeof chapterStats === 'object') {
-                                filteredReps += chapterStats.reps || 0;
-                                filteredTime += chapterStats.time || 0;
+                                reps += chapterStats.reps || 0;
+                                time += chapterStats.time || 0;
                             } else {
-                                filteredReps += chapterStats || 0;
+                                reps += chapterStats || 0;
                             }
                         }
                     });
                 }
-                history.push({ reps: filteredReps, time: filteredTime });
             } else {
-                history.push({ reps: dayData.reps || 0, time: dayData.time || 0 });
+                reps = dayData.reps || 0;
+                time = dayData.time || 0;
             }
+            
+            history.push({ date: dateStr, reps, time });
         }
         
         const totalReps = history.reduce((sum, d) => sum + (d.reps || 0), 0);

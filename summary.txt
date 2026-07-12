@@ -1,4 +1,4 @@
-# STUDY.LOG - Technical Summary (Updated 2026-06-18)
+# STUDY.LOG - Technical Summary (Updated 2026-07-12)
 
 ## Core Concept
 High-performance, AMOLED-black PWA for JEE aspirants. Tracks **Quantity** (Questions) and **Density** (Time per Question) with data-driven tactical advice and personalized Gemini AI insights.
@@ -25,7 +25,7 @@ High-performance, AMOLED-black PWA for JEE aspirants. Tracks **Quantity** (Quest
 3. `js/chapter_validator.js`: Fuzzy matching engine (70% match threshold) and `escapeHTML` fallback.
 4. `js/timer.js`: Standalone Focus Timer module logic (SVG progress, presets, synth audio chime).
 5. `js/analytics.js`: Aggregation for trends, distribution, and density.
-6. `js/graphs.js`: Weekly bar graph rendering.
+6. js/graphs.js: Weekly bar graph rendering (adapted to display fixed Monday-to-Sunday weekly cycles).
 7. `js/history.js`: Optimized history list (Initial limit 4, lazy expand, visual fade, long press hold-to-delete, and XSS escaping).
 8. `js/distribution.js`: Subject/Chapter mastery tracking (with XSS escaping).
 9. `js/advice.js`: Dynamic advice carousel (Consistency/Volume/Density logic).
@@ -64,5 +64,5 @@ High-performance, AMOLED-black PWA for JEE aspirants. Tracks **Quantity** (Quest
 - **PWA Integrity**: Keep `manifest.json`, `sw.js`, and `icon.jpeg` in the root for Vercel discovery. PWA app icons and favicons map to local `icon.jpeg`.
 - **Benchmarks**: Target density varies by source (e.g., Pathfinder: 15m/q, Module: 2m/q). Density stats show dynamic status badges (Speedy, On Track, Slow) relative to target.
 - **Validation**: `js/app.js` blocks submissions with 0 quantity or 0 duration, and clears zero inputs on focus.
-- **Focus Timer**: `js/timer.js` runs a standalone Material 3 Focus Timer with custom progress ring, quick presets, slider, micro-adjustments, and synth alarm chime.
+- **Focus Timer**: js/timer.js runs a standalone dark-themed Focus Timer matching the reference design with Oswald typography, organic brush-effect progress ring, double-outline active preset, custom slider, and adaptive desktop layout.
 - **Import Blueprint**: See `import.txt` for manual JSON editing guide.

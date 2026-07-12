@@ -18,7 +18,6 @@ const GraphEngine = {
         container.innerHTML = ''; // Clear existing
         
         const dayNames = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-        const past7Days = getPast7Days();
         
         // Determine accent color
         const accentColor = containerId === 'reps-graph' ? '#AAFF00' : '#FFFFFF';
@@ -28,6 +27,18 @@ const GraphEngine = {
             const pct = Math.max(5, (val / (maxValue || 1)) * 100); 
             
             const displayVal = dataKey === 'time' ? (val / 60).toFixed(1) : val;
+
+            let dayName = '';
+            if (dayData.date) {
+                const dateParts = dayData.date.split('-');
+                const dateObj = new Date(parseInt(dateParts[0]), parseInt(dateParts[1]) - 1, parseInt(dateParts[2]));
+                dayName = dayNames[dateObj.getDay()];
+            } else {
+                const past7Days = typeof getPast7Days === 'function' ? getPast7Days() : [];
+                if (past7Days[i]) {
+                    dayName = dayNames[new Date(past7Days[i]).getDay()];
+                }
+            }
 
             const col = document.createElement('div');
             col.style.flex = '1';
@@ -41,7 +52,7 @@ const GraphEngine = {
             col.innerHTML = `
                 <div style="background:#141414; border:1px solid rgba(255,255,255,0.08); color:#fff; font-size:10px; padding:2px 6px; border-radius:6px; margin-bottom:5px; font-weight:700;">${displayVal}</div>
                 <div class="graph-bar-fill" style="width:100%; background:${accentColor}; height:0%; border-radius:6px 6px 0 0; transition: height 1.2s cubic-bezier(0.16, 1, 0.3, 1) ${i * 0.05}s;"></div>
-                <span style="font-size:10px; color:#888; margin-top:5px; font-weight:600; text-transform:uppercase;">${dayNames[new Date(past7Days[i]).getDay()]}</span>
+                <span style="font-size:10px; color:#888; margin-top:5px; font-weight:600; text-transform:uppercase;">${dayName}</span>
             `;
             container.appendChild(col);
             
