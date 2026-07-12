@@ -45,6 +45,16 @@ const ChapterDatabase = {
     ]
 };
 
+const LegacyChapterMapping = {
+    "complex numbers and quadratic equations": { subject: "Mathematics", chapter: "Complex Numbers" },
+    "properties of solids and fluids": { subject: "Physics", chapter: "Properties of Solids" },
+    "magnetic effects of current and magnetism": { subject: "Physics", chapter: "Magnetic Effects of Current" },
+    "electromagnetic induction and alternating currents": { subject: "Physics", chapter: "Electromagnetic Induction" },
+    "atoms and nuclei": { subject: "Physics", chapter: "Atoms" },
+    "sets relations and functions": { subject: "Mathematics", chapter: "Sets and Relations" },
+    "limits and derivatives": { subject: "Mathematics", chapter: "Limits" }
+};
+
 const ChapterValidator = {
     /**
      * Returns a flat array of all chapter names.
@@ -60,6 +70,11 @@ const ChapterValidator = {
     identify: function(input) {
         if (!input) return null;
         const query = input.trim().toLowerCase();
+        
+        // 0. Try Legacy Mapping first
+        if (LegacyChapterMapping[query]) {
+            return LegacyChapterMapping[query];
+        }
         
         // 1. Try Exact/Direct Match first
         for (const [subject, chapters] of Object.entries(ChapterDatabase)) {
