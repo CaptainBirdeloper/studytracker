@@ -57,15 +57,10 @@
                     </select>
                 </div>
  
-                <div class="flex flex-col w-full">
+                <div class="flex flex-col relative w-full">
                     <span class="card-title text-gray-500 mb-2">Source Material</span>
-                    <select id="source-input" class="m3-input w-full cursor-pointer py-4 text-base rounded-xl border border-white/5 bg-[#141414] lg:bg-[#1C1C1C]">
-                        <option value="module" class="bg-[#141414] text-white">Module</option>
-                        <option value="pathfinder" class="bg-[#141414] text-white">Pathfinder</option>
-                        <option value="blackbook" class="bg-[#141414] text-white">Blackbook</option>
-                        <option value="kota" class="bg-[#141414] text-white">Kota Material</option>
-                        <option value="other" class="bg-[#141414] text-white">Other</option>
-                    </select>
+                    <input id="source-input" class="m3-input w-full uppercase tracking-wider py-4 text-base rounded-xl border border-white/5 bg-[#141414] lg:bg-[#1C1C1C]" placeholder="ENTER SOURCE MATERIAL" type="text" autocomplete="off"/>
+                    <div id="source-suggestions" class="suggestion-box absolute top-full left-0 w-full hidden z-[1000]"></div>
                 </div>
  
                 <div class="pt-2 w-full">

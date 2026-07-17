@@ -247,16 +247,62 @@ window.StatsController = {
     renderDensity: function() {
         const weekOffset = this.densityScope === 'weekly' ? this.weekOffset : null;
         const stats = Analytics.getDensityStats(weekOffset, this.activeLevel);
+
+        // Dynamically populate source select elements based on actual logged sources
+        ['Physics', 'Mathematics', 'Chemistry'].forEach(sub => {
+            const key = sub.toLowerCase();
+            const select = document.getElementById(`density-source-${key}`);
+            if (!select) return;
+            
+            const currentVal = select.value;
+            select.innerHTML = '<option value="total" class="bg-[#1C1C1C] text-white">All Sources</option>';
+            
+            const subData = stats.subjects[sub];
+            const loggedSources = subData && subData.sources ? Object.keys(subData.sources) : [];
+            loggedSources.forEach(src => {
+                if (src === 'total' || src === 'overall') return;
+                const opt = document.createElement('option');
+                opt.value = src;
+                opt.textContent = src;
+                opt.className = 'bg-[#1C1C1C] text-white';
+                select.appendChild(opt);
+            });
+            
+            const optionExists = Array.from(select.options).some(opt => opt.value === currentVal);
+            if (optionExists) {
+                select.value = currentVal;
+            } else {
+                select.value = 'total';
+            }
+        });
         
         // Target Benchmarks based on research (adjusted for Mains vs Advanced difficulty)
         const targets = this.activeLevel === 'advanced' ? {
-            'physics': { 'total': '6-12m', 'module': '6-10m', 'pathfinder': '12-25m', 'kota': '6-10m' },
-            'mathematics': { 'total': '8-15m', 'module': '8-12m', 'blackbook': '10-20m', 'kota': '8-15m' },
-            'chemistry': { 'total': '3-6m', 'module': '3-5m', 'kota': '3-6m' }
+            'physics': { 
+                'total': '6-12m', 'module': '6-10m', 'modules': '6-10m', 'pathfinder': '12-25m', 'kota': '6-10m', 'kota material': '6-10m',
+                'hcv': '5-8m', 'dc pandey': '5-8m', 'cengage': '6-10m', 'irodov': '10-20m', 'physics galaxy': '6-10m', 'pyqs': '4-8m', 'ncert physics': '3-5m'
+            },
+            'mathematics': { 
+                'total': '8-15m', 'module': '8-12m', 'modules': '8-12m', 'blackbook': '10-20m', 'kota': '8-15m', 'kota material': '8-15m',
+                'cengage': '8-12m', 'a das gupta': '6-10m', 'play with graphs': '5-8m', 'sameer bansal': '8-12m', 'sl loney': '6-10m', 'gn berman': '5-8m', 'pyqs': '5-10m', 'ncert maths': '3-5m'
+            },
+            'chemistry': { 
+                'total': '3-6m', 'module': '3-5m', 'modules': '3-5m', 'kota': '3-6m', 'kota material': '3-6m',
+                'n avasthi': '3-5m', 'ms chauhan': '3-5m', 'vk jaiswal': '3-5m', 'jd lee': '4-8m', 'morrison and boyd': '4-8m', 'himanshu pandey': '3-5m', 'wileys solomons': '4-8m', 'pyqs': '2-4m', 'ncert chemistry': '2-3m'
+            }
         } : {
-            'physics': { 'total': '2-4m', 'module': '2-3m', 'pathfinder': '10-20m', 'kota': '2-4m' },
-            'mathematics': { 'total': '3-5m', 'module': '2-4m', 'blackbook': '5-8m', 'kota': '3-5m' },
-            'chemistry': { 'total': '1-2m', 'module': '1-2m', 'kota': '1-2m' }
+            'physics': { 
+                'total': '2-4m', 'module': '2-3m', 'modules': '2-3m', 'pathfinder': '10-20m', 'kota': '2-4m', 'kota material': '2-4m',
+                'hcv': '2-3m', 'dc pandey': '2-4m', 'pyqs': '2-4m', 'ncert physics': '1-2m'
+            },
+            'mathematics': { 
+                'total': '3-5m', 'module': '2-4m', 'modules': '2-4m', 'blackbook': '5-8m', 'kota': '3-5m', 'kota material': '3-5m',
+                'rd sharma': '2-4m', 'sk goyal': '3-5m', 'arihant master resource': '3-5m', 'pyqs': '2-4m', 'ncert maths': '1-2m'
+            },
+            'chemistry': { 
+                'total': '1-2m', 'module': '1-2m', 'modules': '1-2m', 'kota': '1-2m', 'kota material': '1-2m',
+                'op tandon': '1-2m', 'p bahadur': '1-2m', 'rc mukherjee': '1-2m', 'pyqs': '1-2m', 'ncert chemistry': '1m'
+            }
         };
         
         // Overall (Convert total seconds to minutes first)
@@ -298,7 +344,7 @@ window.StatsController = {
 
             // Update Target Label
             const targetLabel = document.getElementById(`target-val-${key}`);
-            const targetStr = targets[key][source];
+            const targetStr = targets[key][source.toLowerCase()];
             if (targetLabel) {
                 targetLabel.textContent = `Target: ${targetStr || 'N/A'}`;
             }

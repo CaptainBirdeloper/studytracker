@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const sourceInput = document.getElementById('source-input');
     const submitBtn = document.getElementById('submit-btn');
     const chapterSuggestions = document.getElementById('chapter-suggestions');
+    const sourceSuggestions = document.getElementById('source-suggestions');
 
     if (!submitBtn) {
         console.error("Submit button not found!");
@@ -116,7 +117,120 @@ document.addEventListener('DOMContentLoaded', () => {
     chapterInput.addEventListener('blur', () => {
         setTimeout(() => chapterSuggestions.classList.add('hidden'), 200);
     });
-
+ 
+    // --- Source Material Autofill Logic ---
+    const SOURCE_PRESETS = {
+        'mains': [
+            'NCERT Physics', 'NCERT Chemistry', 'NCERT Maths', 'HCV', 'DC Pandey', 
+            'RD Sharma', 'SK Goyal', 'OP Tandon', 'P Bahadur', 'RC Mukherjee', 
+            'Arihant Master Resource', 'Modules', 'Kota Material', 'PYQs'
+        ],
+        'advanced': [
+            'HCV', 'DC Pandey', 'Cengage', 'Irodov', 'Physics Galaxy', 'Pathfinder', 
+            'N Avasthi', 'MS Chauhan', 'VK Jaiswal', 'JD Lee', 'Morrison and Boyd', 
+            'Himanshu Pandey', 'Wileys Solomons', 'Blackbook', 'A Das Gupta', 
+            'Play with Graphs', 'Sameer Bansal', 'SL Loney', 'GN Berman', 
+            'Modules', 'Kota Material', 'PYQs'
+        ]
+    };
+ 
+    let selectedSourceIndex = -1;
+    let currentSourceSuggestions = [];
+ 
+    function updateSourceSuggestions() {
+        const query = sourceInput.value.trim().toLowerCase();
+        if (query.length < 1) {
+            sourceSuggestions.classList.add('hidden');
+            return;
+        }
+ 
+        const activeLevel = (levelInput && levelInput.value) || 'mains';
+        const presets = SOURCE_PRESETS[activeLevel] || [];
+        
+        let custom = [];
+        try {
+            const data = loadData();
+            custom = data.customSources || [];
+        } catch(e) {
+            console.error(e);
+        }
+ 
+        const combined = [...presets];
+        custom.forEach(c => {
+            if (!combined.some(p => p.toLowerCase() === c.toLowerCase())) {
+                combined.push(c);
+            }
+        });
+ 
+        currentSourceSuggestions = combined
+            .filter(src => src.toLowerCase().includes(query))
+            .slice(0, 5);
+ 
+        if (currentSourceSuggestions.length > 0) {
+            renderSourceSuggestions();
+            sourceSuggestions.classList.remove('hidden');
+        } else {
+            sourceSuggestions.classList.add('hidden');
+        }
+    }
+ 
+    function renderSourceSuggestions() {
+        sourceSuggestions.innerHTML = currentSourceSuggestions.map((src, index) => `
+            <div class="source-suggestion-item px-6 py-4 cursor-pointer hover:bg-white/5 transition-colors border-b border-gray-900 last:border-0 ${index === selectedSourceIndex ? 'bg-white/10' : ''}" data-index="${index}">
+                <div class="flex justify-between items-center">
+                    <span class="text-white font-medium">${src}</span>
+                </div>
+            </div>
+        `).join('');
+ 
+        document.querySelectorAll('.source-suggestion-item').forEach(item => {
+            item.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                selectSourceSuggestion(parseInt(item.dataset.index));
+            });
+        });
+    }
+ 
+    function selectSourceSuggestion(index) {
+        if (index >= 0 && index < currentSourceSuggestions.length) {
+            sourceInput.value = currentSourceSuggestions[index];
+            sourceSuggestions.classList.add('hidden');
+            selectedSourceIndex = -1;
+            submitBtn.focus();
+        }
+    }
+ 
+    sourceInput.addEventListener('input', () => {
+        selectedSourceIndex = -1;
+        updateSourceSuggestions();
+    });
+ 
+    sourceInput.addEventListener('keydown', (e) => {
+        if (sourceSuggestions.classList.contains('hidden')) return;
+ 
+        if (e.key === 'Tab' || e.key === 'Enter') {
+            const indexToSelect = selectedSourceIndex >= 0 ? selectedSourceIndex : 0;
+            if (currentSourceSuggestions.length > 0) {
+                e.preventDefault();
+                selectSourceSuggestion(indexToSelect);
+            }
+        } else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            selectedSourceIndex = (selectedSourceIndex + 1) % currentSourceSuggestions.length;
+            renderSourceSuggestions();
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            selectedSourceIndex = (selectedSourceIndex - 1 + currentSourceSuggestions.length) % currentSourceSuggestions.length;
+            renderSourceSuggestions();
+        } else if (e.key === 'Escape') {
+            sourceSuggestions.classList.add('hidden');
+        }
+    });
+ 
+    sourceInput.addEventListener('blur', () => {
+        setTimeout(() => sourceSuggestions.classList.add('hidden'), 200);
+    });
+ 
     // --- Submit Logic ---
 
     function showToast(message, isError = false) {
@@ -137,34 +251,62 @@ document.addEventListener('DOMContentLoaded', () => {
         const reps = parseInt(questionsInput.value) || 0;
         const chapter = chapterInput.value;
         const timeMinutes = parseInt(timeInput.value) || 0;
-        const source = sourceInput.value;
+        const rawSource = sourceInput.value.trim();
         const timeSeconds = timeMinutes * 60;
-
+ 
         if (reps <= 0) {
             showToast("Quantity must be greater than 0", true);
             return;
         }
-
+ 
         if (timeMinutes <= 0) {
             showToast("Duration must be greater than 0", true);
             return;
         }
-
+ 
         if (!chapter.trim()) {
             showToast("Please enter a focus area", true);
             return;
         }
-
+ 
+        if (!rawSource) {
+            showToast("Please enter a source material", true);
+            return;
+        }
+ 
         const identified = ChapterValidator.identify(chapter);
         const finalChapterName = identified ? identified.chapter : (chapter.trim() || 'Uncategorized');
-
-        updateStats(reps, timeSeconds, finalChapterName, source, levelInput ? levelInput.value : 'mains');
+ 
+        // Normalize source casing against presets and custom sources
+        let finalSource = rawSource;
+        const activeLevel = (levelInput && levelInput.value) || 'mains';
+        const presets = SOURCE_PRESETS[activeLevel] || [];
+        const matchingPreset = presets.find(p => p.toLowerCase() === finalSource.toLowerCase());
+        if (matchingPreset) {
+            finalSource = matchingPreset;
+        } else {
+            try {
+                const data = loadData();
+                const matchingCustom = (data.customSources || []).find(c => c.toLowerCase() === finalSource.toLowerCase());
+                if (matchingCustom) {
+                    finalSource = matchingCustom;
+                }
+            } catch(e) {}
+        }
+ 
+        updateStats(reps, timeSeconds, finalChapterName, finalSource, levelInput ? levelInput.value : 'mains');
+        
+        // Save to custom sources if it's a new custom source
+        if (typeof window.addCustomSource === 'function') {
+            window.addCustomSource(finalSource);
+        }
+        
         showToast("Progress Saved");
         
         // Reset UI
         questionsInput.value = '0';
         chapterInput.value = '';
         timeInput.value = '0';
-        sourceInput.selectedIndex = 0;
+        sourceInput.value = '';
     });
 });

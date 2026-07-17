@@ -206,29 +206,21 @@ const Analytics = {
                     const subject = id ? id.subject : null;
  
                     if (reps > 0) {
-                        const hasInternal = sources.some(s => s === 'module' || s === 'kota');
-                        
-                        if (hasInternal) {
-                            stats.overall.time += time;
-                            stats.overall.reps += reps;
-                        }
- 
+                        stats.overall.time += time;
+                        stats.overall.reps += reps;
+
                         if (subject && stats.subjects[subject]) {
-                            if (hasInternal) {
-                                stats.subjects[subject].time += time;
-                                stats.subjects[subject].reps += reps;
-                            }
- 
+                            stats.subjects[subject].time += time;
+                            stats.subjects[subject].reps += reps;
+
                             const normalizedChKey = id.chapter.toLowerCase();
                             if (!stats.subjects[subject].chapters[normalizedChKey]) {
                                 stats.subjects[subject].chapters[normalizedChKey] = { time: 0, reps: 0, sources: {} };
                             }
                             const chStats = stats.subjects[subject].chapters[normalizedChKey];
-                            if (hasInternal) {
-                                chStats.time += time;
-                                chStats.reps += reps;
-                            }
- 
+                            chStats.time += time;
+                            chStats.reps += reps;
+
                             sources.forEach(src => {
                                 // Subject-level sources
                                 if (!stats.subjects[subject].sources[src]) {
@@ -236,7 +228,7 @@ const Analytics = {
                                 }
                                 stats.subjects[subject].sources[src].time += time;
                                 stats.subjects[subject].sources[src].reps += reps;
- 
+
                                 // Chapter-level sources
                                 if (!chStats.sources[src]) {
                                     chStats.sources[src] = { time: 0, reps: 0 };
@@ -290,13 +282,7 @@ const Analytics = {
                     const sources = chData.sources || ['other'];
 
                     if (reps > 0) {
-                        if (source === 'total') {
-                            const hasInternal = sources.some(s => s === 'module' || s === 'kota');
-                            if (hasInternal) {
-                                dailyTime += time;
-                                dailyReps += reps;
-                            }
-                        } else if (sources.includes(source)) {
+                        if (source === 'total' || sources.includes(source)) {
                             dailyTime += time;
                             dailyReps += reps;
                         }

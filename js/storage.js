@@ -68,6 +68,7 @@ function loadData() {
                 }
             });
         }
+        if (!parsed.customSources) parsed.customSources = [];
         return parsed;
     }
     return {
@@ -80,6 +81,7 @@ function loadData() {
         advReps: 0,
         advTime: 0,
         history: {},
+        customSources: [],
         settings: {
             fontSize: 16,
             fontFamily: "'Inter', sans-serif"
@@ -352,4 +354,27 @@ if (typeof document !== 'undefined') {
             loader.style.pointerEvents = 'none';
         }
     });
+
+    window.addCustomSource = function(source) {
+        if (!source) return;
+        const data = loadData();
+        if (!data.customSources) data.customSources = [];
+        const exists = data.customSources.some(s => s.toLowerCase() === source.trim().toLowerCase());
+        if (!exists) {
+            const allPresets = [
+                'NCERT Physics', 'NCERT Chemistry', 'NCERT Maths', 'HCV', 'DC Pandey', 
+                'RD Sharma', 'SK Goyal', 'OP Tandon', 'P Bahadur', 'RC Mukherjee', 
+                'Arihant Master Resource', 'Modules', 'Kota Material', 'PYQs',
+                'Cengage', 'Irodov', 'Physics Galaxy', 'Pathfinder', 'N Avasthi', 
+                'MS Chauhan', 'VK Jaiswal', 'JD Lee', 'Morrison and Boyd', 
+                'Himanshu Pandey', 'Wileys Solomons', 'Blackbook', 'A Das Gupta', 
+                'Play with Graphs', 'Sameer Bansal', 'SL Loney', 'GN Berman'
+            ];
+            const isPreset = allPresets.some(p => p.toLowerCase() === source.trim().toLowerCase());
+            if (!isPreset) {
+                data.customSources.push(source.trim());
+                saveData(data);
+            }
+        }
+    };
 }

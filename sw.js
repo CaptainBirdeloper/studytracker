@@ -1,4 +1,4 @@
-const CACHE_NAME = 'studylog-v44';
+const CACHE_NAME = 'studylog-v46';
 const ASSETS = [
   '/',
   '/index.html',
