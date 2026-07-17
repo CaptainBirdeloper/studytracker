@@ -8,7 +8,7 @@ const Analytics = {
      * Aggregates all chapter data across all history entries.
      * Ensures case-insensitive grouping.
      */
-    getChapterSummary: function() {
+    getChapterSummary: function(filterLevel = null) {
         const data = loadData();
         const summary = {};
         
@@ -23,8 +23,21 @@ const Analytics = {
                     }
                     
                     if (typeof chapterData === 'object') {
-                        summary[key].reps += chapterData.reps || 0;
-                        summary[key].time += chapterData.time || 0;
+                        let reps = 0;
+                        let time = 0;
+                        if (filterLevel === 'mains') {
+                            reps = chapterData.mainsReps !== undefined ? chapterData.mainsReps : chapterData.reps || 0;
+                            time = chapterData.mainsTime !== undefined ? chapterData.mainsTime : chapterData.time || 0;
+                        } else if (filterLevel === 'advanced') {
+                            reps = chapterData.advReps || 0;
+                            time = chapterData.advTime || 0;
+                        } else {
+                            reps = chapterData.reps || 0;
+                            time = chapterData.time || 0;
+                        }
+                        
+                        summary[key].reps += reps;
+                        summary[key].time += time;
                         if (chapterData.sources) {
                             chapterData.sources.forEach(s => {
                                 if (!summary[key].sources.includes(s)) {
@@ -34,7 +47,9 @@ const Analytics = {
                         }
                     } else {
                         // Legacy support
-                        summary[key].reps += chapterData || 0;
+                        if (filterLevel !== 'advanced') {
+                            summary[key].reps += chapterData || 0;
+                        }
                     }
                 });
             }
@@ -42,6 +57,7 @@ const Analytics = {
         
         return Object.entries(summary)
             .map(([name, counts]) => ({ name, ...counts }))
+            .filter(ch => ch.reps > 0) // Only include chapters with reps in this filter
             .sort((a, b) => b.reps - a.reps);
     },
 
@@ -66,7 +82,7 @@ const Analytics = {
      * @param {number} offset - 0 for current week, 1 for previous, etc.
      * @param {string} filterSubject - Optional subject name to filter by.
      */
-    getWeeklySummary: function(offset = 0, filterSubject = null) {
+    getWeeklySummary: function(offset = 0, filterSubject = null, filterLevel = null) {
         const data = loadData();
         const today = new Date();
         const day = today.getDay(); // 0 (Sun) to 6 (Sat)
@@ -91,17 +107,35 @@ const Analytics = {
                         const id = ChapterValidator.identify(chapterName);
                         if (id && id.subject === filterSubject) {
                             if (typeof chapterStats === 'object') {
-                                reps += chapterStats.reps || 0;
-                                time += chapterStats.time || 0;
+                                if (filterLevel === 'mains') {
+                                    reps += chapterStats.mainsReps !== undefined ? chapterStats.mainsReps : chapterStats.reps || 0;
+                                    time += chapterStats.mainsTime !== undefined ? chapterStats.mainsTime : chapterStats.time || 0;
+                                } else if (filterLevel === 'advanced') {
+                                    reps += chapterStats.advReps || 0;
+                                    time += chapterStats.advTime || 0;
+                                } else {
+                                    reps += chapterStats.reps || 0;
+                                    time += chapterStats.time || 0;
+                                }
                             } else {
-                                reps += chapterStats || 0;
+                                if (filterLevel !== 'advanced') {
+                                    reps += chapterStats || 0;
+                                }
                             }
                         }
                     });
                 }
             } else {
-                reps = dayData.reps || 0;
-                time = dayData.time || 0;
+                if (filterLevel === 'mains') {
+                    reps = dayData.mainsReps !== undefined ? dayData.mainsReps : dayData.reps || 0;
+                    time = dayData.mainsTime !== undefined ? dayData.mainsTime : dayData.time || 0;
+                } else if (filterLevel === 'advanced') {
+                    reps = dayData.advReps || 0;
+                    time = dayData.advTime || 0;
+                } else {
+                    reps = dayData.reps || 0;
+                    time = dayData.time || 0;
+                }
             }
             
             history.push({ date: dateStr, reps, time });
@@ -123,7 +157,7 @@ const Analytics = {
      * Calculates Question Density (Time per Question)
      * Groups data by Subject and Source.
      */
-    getDensityStats: function(weekOffset = null) {
+    getDensityStats: function(weekOffset = null, filterLevel = null) {
         const data = loadData();
         const stats = {
             overall: { time: 0, reps: 0 },
@@ -133,7 +167,7 @@ const Analytics = {
                 'Chemistry': { time: 0, reps: 0, sources: {}, chapters: {} }
             }
         };
-
+ 
         // Determine allowed dates if weekOffset is specified
         let allowedDates = null;
         if (weekOffset !== null) {
@@ -146,20 +180,31 @@ const Analytics = {
                 allowedDates.push(getLocalISODate(d));
             }
         }
-
+ 
         Object.entries(data.history).forEach(([dateStr, day]) => {
             if (allowedDates && !allowedDates.includes(dateStr)) return;
-
+ 
             if (day.chapters) {
                 Object.entries(day.chapters).forEach(([chapterName, chData]) => {
                     if (typeof chData !== 'object') return;
                     
-                    const reps = chData.reps || 0;
-                    const time = chData.time || 0;
+                    let reps = 0;
+                    let time = 0;
+                    if (filterLevel === 'mains') {
+                        reps = chData.mainsReps !== undefined ? chData.mainsReps : chData.reps || 0;
+                        time = chData.mainsTime !== undefined ? chData.mainsTime : chData.time || 0;
+                    } else if (filterLevel === 'advanced') {
+                        reps = chData.advReps || 0;
+                        time = chData.advTime || 0;
+                    } else {
+                        reps = chData.reps || 0;
+                        time = chData.time || 0;
+                    }
+                    
                     const sources = chData.sources || ['other'];
                     const id = ChapterValidator.identify(chapterName);
                     const subject = id ? id.subject : null;
-
+ 
                     if (reps > 0) {
                         const hasInternal = sources.some(s => s === 'module' || s === 'kota');
                         
@@ -167,13 +212,13 @@ const Analytics = {
                             stats.overall.time += time;
                             stats.overall.reps += reps;
                         }
-
+ 
                         if (subject && stats.subjects[subject]) {
                             if (hasInternal) {
                                 stats.subjects[subject].time += time;
                                 stats.subjects[subject].reps += reps;
                             }
-
+ 
                             const normalizedChKey = id.chapter.toLowerCase();
                             if (!stats.subjects[subject].chapters[normalizedChKey]) {
                                 stats.subjects[subject].chapters[normalizedChKey] = { time: 0, reps: 0, sources: {} };
@@ -183,7 +228,7 @@ const Analytics = {
                                 chStats.time += time;
                                 chStats.reps += reps;
                             }
-
+ 
                             sources.forEach(src => {
                                 // Subject-level sources
                                 if (!stats.subjects[subject].sources[src]) {
@@ -191,7 +236,7 @@ const Analytics = {
                                 }
                                 stats.subjects[subject].sources[src].time += time;
                                 stats.subjects[subject].sources[src].reps += reps;
-
+ 
                                 // Chapter-level sources
                                 if (!chStats.sources[src]) {
                                     chStats.sources[src] = { time: 0, reps: 0 };
@@ -204,7 +249,7 @@ const Analytics = {
                 });
             }
         });
-
+ 
         return stats;
     },
 
@@ -212,7 +257,7 @@ const Analytics = {
      * Calculates the density trend over time for a subject and a specific source.
      * Returns an array of { date, density } sorted chronologically for days that matching work was logged.
      */
-    getDensityTrend: function(subject, source = 'total') {
+    getDensityTrend: function(subject, source = 'total', filterLevel = null) {
         const data = loadData();
         const dates = Object.keys(data.history).sort();
         const trend = [];
@@ -228,8 +273,20 @@ const Analytics = {
                 if (typeof chData !== 'object') return;
                 const id = ChapterValidator.identify(chapterName);
                 if (id && id.subject === subject) {
-                    const reps = chData.reps || 0;
-                    const time = chData.time || 0;
+                    let reps = 0;
+                    let time = 0;
+                    
+                    if (filterLevel === 'mains') {
+                        reps = chData.mainsReps !== undefined ? chData.mainsReps : chData.reps || 0;
+                        time = chData.mainsTime !== undefined ? chData.mainsTime : chData.time || 0;
+                    } else if (filterLevel === 'advanced') {
+                        reps = chData.advReps || 0;
+                        time = chData.advTime || 0;
+                    } else {
+                        reps = chData.reps || 0;
+                        time = chData.time || 0;
+                    }
+                    
                     const sources = chData.sources || ['other'];
 
                     if (reps > 0) {

@@ -363,15 +363,21 @@ input:focus:not(:focus-visible), select:focus:not(:focus-visible), button:focus:
 /* Bottom Navigation Bar */
 .bottom-nav {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background-color: #0c0c0c !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  padding: 16px 24px calc(16px + env(safe-area-inset-bottom, 16px));
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  max-width: 500px;
+  background-color: rgba(12, 12, 12, 0.6) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 12px 16px;
   display: flex;
   justify-content: space-around;
   z-index: 100;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
 }
 .nav-item {
   color: var(--text-secondary) !important;
@@ -480,16 +486,20 @@ input:focus:not(:focus-visible), select:focus:not(:focus-visible), button:focus:
     top: 0 !important;
     left: 0 !important;
     bottom: 0 !important;
+    transform: none !important;
     width: 280px !important;
+    max-width: none !important;
     height: 100vh !important;
-    border-top: none !important;
+    border: none !important;
     border-right: 1px solid rgba(255, 255, 255, 0.06) !important;
+    border-radius: 0 !important;
     flex-direction: column !important;
     justify-content: flex-start !important;
     align-items: flex-start !important;
     padding: 48px 24px !important;
     gap: 24px !important;
     background-color: #0c0c0c !important;
+    box-shadow: none !important;
   }
   
   .nav-item {

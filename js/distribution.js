@@ -18,7 +18,8 @@ const Distribution = {
     },
 
     renderSubjects: function(container) {
-        const chapters = Analytics.getChapterSummary();
+        const level = (window.StatsController && window.StatsController.activeLevel) || null;
+        const chapters = Analytics.getChapterSummary(level);
         const distribution = {
             "Physics": { reps: 0, time: 0 },
             "Chemistry": { reps: 0, time: 0 },
@@ -50,7 +51,8 @@ const Distribution = {
     },
 
     renderChapters: function(container) {
-        const trackedChapters = Analytics.getChapterSummary();
+        const level = (window.StatsController && window.StatsController.activeLevel) || null;
+        const trackedChapters = Analytics.getChapterSummary(level);
         const MASTERY_GOAL = 150;
         
         // 1. Get all known chapters from the validator

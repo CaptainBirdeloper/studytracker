@@ -145,11 +145,12 @@ const AiAdviceEngine = {
 
     fetchAiAdvice: async function(apiKey, data) {
         // Prepare stats
-        const chapters = Analytics.getChapterSummary();
-        const densityStats = Analytics.getDensityStats();
-        const weeklyNow = Analytics.getWeeklySummary(0);
-        const weeklyLast = Analytics.getWeeklySummary(1);
-
+        const level = (window.StatsController && window.StatsController.activeLevel) || 'mains';
+        const chapters = Analytics.getChapterSummary(level);
+        const densityStats = Analytics.getDensityStats(null, level);
+        const weeklyNow = Analytics.getWeeklySummary(0, null, level);
+        const weeklyLast = Analytics.getWeeklySummary(1, null, level);
+ 
         const subjectsStr = ['Physics', 'Mathematics', 'Chemistry'].map(sub => {
             const sData = densityStats.subjects[sub];
             const reps = sData ? sData.reps : 0;
@@ -157,20 +158,20 @@ const AiAdviceEngine = {
             const density = reps > 0 ? (mins / reps).toFixed(1) : '0.0';
             return `${sub}: ${reps} Qs solved, ${mins.toFixed(1)} mins spent, Density: ${density} min/q.`;
         }).join('\n');
-
+ 
         const topChaptersStr = chapters.slice(0, 8).map(ch => {
             const id = ChapterValidator.identify(ch.name);
             const sub = id ? id.subject : 'Unknown';
             return `- ${ch.name} (${sub}): ${ch.reps} Qs solved, ${(ch.time / 60).toFixed(1)} mins spent.`;
         }).join('\n');
-
+ 
         const statsPrompt = `
-You are a highly analytical JEE study coach. Review the student's study data below and produce EXACTLY 3 highly tactical, actionable advice cards in JSON.
+You are a highly analytical JEE study coach. Review the student's study data below for ${level === 'mains' ? 'JEE Mains' : 'JEE Advanced'} level and produce EXACTLY 3 highly tactical, actionable advice cards in JSON.
 Highlight specific strengths, imbalances, pacing bottlenecks, or momentum changes. Do not be generic. Refer to specific chapters or numbers.
-
-Student Stats:
-- Total Solved: ${data.totalReps} questions
-- Total Time: ${(data.totalTime / 3600).toFixed(1)} hours
+ 
+Student Stats (${level === 'mains' ? 'JEE Mains' : 'JEE Advanced'} Level):
+- Total Solved: ${level === 'mains' ? (data.mainsReps || 0) : (data.advReps || 0)} questions
+- Total Time: ${((level === 'mains' ? (data.mainsTime || 0) : (data.advTime || 0)) / 3600).toFixed(1)} hours
 - Current Streak: ${data.streak} consecutive days
 - Subject Statistics:
 ${subjectsStr}
@@ -179,11 +180,13 @@ ${subjectsStr}
   * Last week: ${weeklyLast.totalReps} Qs solved, ${(weeklyLast.totalTime / 60).toFixed(1)} mins spent.
 - Top Studied Chapters:
 ${topChaptersStr}
-
-JEE target pacing ranges (minutes per question):
-- Physics: 2-4m, theme color: '#7BBFDF'
+ 
+JEE target pacing ranges (minutes per question) for this level:
+${level === 'advanced' ? `- Physics: 6-12m, theme color: '#7BBFDF'
+- Mathematics: 8-15m, theme color: '#E8943A'
+- Chemistry: 3-6m, theme color: '#B8E04A'` : `- Physics: 2-4m, theme color: '#7BBFDF'
 - Mathematics: 3-5m, theme color: '#E8943A'
-- Chemistry: 1-2m, theme color: '#B8E04A'
+- Chemistry: 1-2m, theme color: '#B8E04A'`}
 `;
 
         const responseSchema = {

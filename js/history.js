@@ -6,9 +6,9 @@ const HistoryEngine = {
     initialLimit: 4,
 
     init: function() {
-        const expandBtn = document.getElementById('expand-history-btn');
-        if (expandBtn) {
-            expandBtn.addEventListener('click', () => {
+        const expandOverlay = document.getElementById('history-expansion');
+        if (expandOverlay) {
+            expandOverlay.addEventListener('click', () => {
                 this.isExpanded = true;
                 this.render();
             });
@@ -16,7 +16,8 @@ const HistoryEngine = {
     },
 
     render: function() {
-        const chapters = Analytics.getChapterSummary();
+        const level = (window.StatsController && window.StatsController.activeLevel) || null;
+        const chapters = Analytics.getChapterSummary(level);
         const container = document.getElementById('chapters-list');
         const expansionUI = document.getElementById('history-expansion');
         if (!container) return;

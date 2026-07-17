@@ -61,8 +61,9 @@ const AdviceEngine = {
     },
 
     render: function() {
-        const chapters = Analytics.getChapterSummary();
-        const densityStats = Analytics.getDensityStats();
+        const level = (window.StatsController && window.StatsController.activeLevel) || null;
+        const chapters = Analytics.getChapterSummary(level);
+        const densityStats = Analytics.getDensityStats(null, level);
         this.allAdvice = [];
         this.currentIndex = 0;
 

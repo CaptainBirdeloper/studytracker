@@ -3,8 +3,43 @@ window.StatsController = {
     subjectFilter: null,
     subjects: [null, 'Physics', 'Mathematics', 'Chemistry'],
     subjectIndex: 0,
+    activeLevel: 'mains',
     
     init: function() {
+        const mainsBtn = document.getElementById('stats-level-mains');
+        const advBtn = document.getElementById('stats-level-advanced');
+        if (mainsBtn && advBtn) {
+            mainsBtn.addEventListener('click', () => this.switchLevel('mains'));
+            advBtn.addEventListener('click', () => this.switchLevel('advanced'));
+        }
+
+        const mainContainer = document.querySelector('main');
+        if (mainContainer) {
+            let startX = 0;
+            let startY = 0;
+            
+            mainContainer.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+            }, { passive: true });
+            
+            mainContainer.addEventListener('touchend', (e) => {
+                const endX = e.changedTouches[0].clientX;
+                const endY = e.changedTouches[0].clientY;
+                
+                const diffX = endX - startX;
+                const diffY = endY - startY;
+                
+                if (Math.abs(diffX) > 80 && Math.abs(diffY) < 50) {
+                    if (diffX > 0 && this.activeLevel === 'advanced') {
+                        this.switchLevel('mains');
+                    } else if (diffX < 0 && this.activeLevel === 'mains') {
+                        this.switchLevel('advanced');
+                    }
+                }
+            }, { passive: true });
+        }
+
         document.getElementById('week-prev').addEventListener('click', () => {
             this.weekOffset++;
             this.refreshAll();
@@ -100,10 +135,58 @@ window.StatsController = {
         this.refreshAll();
     },
 
+    switchLevel: function(level) {
+        if (this.activeLevel === level) return;
+        
+        const mainContainer = document.querySelector('main');
+        if (!mainContainer) {
+            this.activeLevel = level;
+            this.updateLevelUI();
+            this.refreshAll();
+            return;
+        }
+        
+        const direction = level === 'advanced' ? '-50px' : '50px';
+        mainContainer.style.transition = 'transform 0.15s ease, opacity 0.15s ease';
+        mainContainer.style.transform = `translateX(${direction})`;
+        mainContainer.style.opacity = '0';
+        
+        setTimeout(() => {
+            this.activeLevel = level;
+            this.updateLevelUI();
+            this.refreshAll();
+            
+            mainContainer.style.transition = 'none';
+            mainContainer.style.transform = `translateX(${level === 'advanced' ? '50px' : '-50px'})`;
+            
+            // Force reflow
+            mainContainer.offsetHeight; 
+            
+            mainContainer.style.transition = 'transform 0.15s ease, opacity 0.15s ease';
+            mainContainer.style.transform = 'translateX(0)';
+            mainContainer.style.opacity = '1';
+        }, 150);
+    },
+
+    updateLevelUI: function() {
+        const mainsBtn = document.getElementById('stats-level-mains');
+        const advBtn = document.getElementById('stats-level-advanced');
+        
+        if (!mainsBtn || !advBtn) return;
+        
+        if (this.activeLevel === 'mains') {
+            mainsBtn.className = 'flex-1 rounded-full text-center py-1.5 text-[10px] uppercase tracking-widest font-black transition-all cursor-pointer bg-[#AAFF00] text-black shadow-md shadow-[#AAFF00]/10';
+            advBtn.className = 'flex-1 rounded-full text-center py-1.5 text-[10px] uppercase tracking-widest font-black transition-all cursor-pointer bg-transparent text-gray-400 hover:text-white';
+        } else {
+            advBtn.className = 'flex-1 rounded-full text-center py-1.5 text-[10px] uppercase tracking-widest font-black transition-all cursor-pointer bg-[#AAFF00] text-black shadow-md shadow-[#AAFF00]/10';
+            mainsBtn.className = 'flex-1 rounded-full text-center py-1.5 text-[10px] uppercase tracking-widest font-black transition-all cursor-pointer bg-transparent text-gray-400 hover:text-white';
+        }
+    },
+
     updateHero: function() {
         const data = loadData();
-        const repsTarget = data.totalReps || 0;
-        const timeTarget = parseFloat((data.totalTime / 3600).toFixed(1)) || 0;
+        const repsTarget = this.activeLevel === 'mains' ? (data.mainsReps || 0) : (data.advReps || 0);
+        const timeTarget = parseFloat(((this.activeLevel === 'mains' ? (data.mainsTime || 0) : (data.advTime || 0)) / 3600).toFixed(1)) || 0;
         
         const duration = 1200; // 1.2s
         const startTime = performance.now();
@@ -163,10 +246,14 @@ window.StatsController = {
 
     renderDensity: function() {
         const weekOffset = this.densityScope === 'weekly' ? this.weekOffset : null;
-        const stats = Analytics.getDensityStats(weekOffset);
+        const stats = Analytics.getDensityStats(weekOffset, this.activeLevel);
         
-        // Target Benchmarks based on research
-        const targets = {
+        // Target Benchmarks based on research (adjusted for Mains vs Advanced difficulty)
+        const targets = this.activeLevel === 'advanced' ? {
+            'physics': { 'total': '6-12m', 'module': '6-10m', 'pathfinder': '12-25m', 'kota': '6-10m' },
+            'mathematics': { 'total': '8-15m', 'module': '8-12m', 'blackbook': '10-20m', 'kota': '8-15m' },
+            'chemistry': { 'total': '3-6m', 'module': '3-5m', 'kota': '3-6m' }
+        } : {
             'physics': { 'total': '2-4m', 'module': '2-3m', 'pathfinder': '10-20m', 'kota': '2-4m' },
             'mathematics': { 'total': '3-5m', 'module': '2-4m', 'blackbook': '5-8m', 'kota': '3-5m' },
             'chemistry': { 'total': '1-2m', 'module': '1-2m', 'kota': '1-2m' }
@@ -291,7 +378,7 @@ window.StatsController = {
         container.innerHTML = '';
 
         const subject = this.activeTrendSubject;
-        const stats = Analytics.getDensityStats();
+        const stats = Analytics.getDensityStats(null, this.activeLevel);
         const subData = stats.subjects[subject];
         
         // Define sources list starting with "total" (labeled as "Overall")
@@ -330,7 +417,7 @@ window.StatsController = {
     renderTrendChart: function() {
         const subject = this.activeTrendSubject;
         const source = this.activeTrendSource;
-        const trend = Analytics.getDensityTrend(subject, source);
+        const trend = Analytics.getDensityTrend(subject, source, this.activeLevel);
         const canvas = document.getElementById('density-trend-canvas');
         
         if (!canvas) return;
@@ -495,14 +582,14 @@ window.StatsController = {
     refreshAll: function() {
         this.updateDensityScopeUI();
         this.updateHero();
-        const weekly = Analytics.getWeeklySummary(this.weekOffset, this.subjectFilter);
+        const weekly = Analytics.getWeeklySummary(this.weekOffset, this.subjectFilter, this.activeLevel);
         
         // Navigation UI
         const weekLabel = document.getElementById('week-label');
         const nextBtn = document.getElementById('week-next');
         const progressLabel = document.getElementById('progress-label');
 
-        weekLabel.textContent = this.weekOffset === 0 ? 'This Week' : `${this.weekOffset} Weeks Ago`;
+        weekLabel.textContent = this.weekOffset === 0 ? 'THIS WK' : `-${this.weekOffset} WK${this.weekOffset > 1 ? 'S' : ''}`;
         nextBtn.disabled = (this.weekOffset === 0);
 
         // Update Progress Label based on filter

@@ -13,6 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
+    const levelInput = document.getElementById('level-input');
+
     // --- Clear lingering '0' on focus ---
     [questionsInput, timeInput].forEach(input => {
         if (input) {
@@ -156,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const identified = ChapterValidator.identify(chapter);
         const finalChapterName = identified ? identified.chapter : (chapter.trim() || 'Uncategorized');
 
-        updateStats(reps, timeSeconds, finalChapterName, source);
+        updateStats(reps, timeSeconds, finalChapterName, source, levelInput ? levelInput.value : 'mains');
         showToast("Progress Saved");
         
         // Reset UI
